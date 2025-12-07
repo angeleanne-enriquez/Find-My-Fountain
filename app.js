@@ -9,7 +9,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-//import configRoutes from "./routes/index.js";
+import configRoutes from "./routes/index.js";
 import exphbs from "express-handlebars";
 import fileUpload from "express-fileupload";
 
