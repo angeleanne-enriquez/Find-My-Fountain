@@ -1,3 +1,4 @@
+//git pull -> gets an updated version
 //git add . -> updates any files you edited
 //git commit -m "<message what you did>" 
 //git push 
