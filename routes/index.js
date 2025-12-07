@@ -1,11 +1,10 @@
-import authRoutes from './auth_routes.js';
+import usersRoutes from "./auth_routes.js";
 
-const constructorMethod = (app) => {
-  app.use('/', courseRoutes);
-
-  app.use(/(.*)/, (req, res) => {
-    res.status(404).json({error: 'Route Not found'});
+const configRoutes = (app) => {
+  app.use("/", usersRoutes);
+  app.use(/(.'*')/, (req, res) => {
+    return res.status(404).json({ error: "Not found" });
   });
 };
 
-export default constructorMethod;
+export default configRoutes;
