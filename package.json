@@ -1,0 +1,17 @@
+{
+  "name": "final_helpers",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Jacob Barbulescu",
+  "type": "commonjs",
+  "main": "helpers.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm app.js"
+  },
+  "dependencies": {
+    "validator": "^13.15.23"
+  }
+}
