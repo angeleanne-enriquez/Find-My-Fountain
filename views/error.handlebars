@@ -1,0 +1,15 @@
+{{!-- 
+  Used to display error messages to the user.
+  It is rendered inside the main layout and shows a generic error
+  heading along with a specific error message passed from the server.
+--}}
+
+<section>
+  <h1>Error</h1>
+
+  {{#if error}}
+    <p>{{error}}</p>
+  {{else}}
+    <p>Something went wrong. Please try again later.</p>
+  {{/if}}
+</section>

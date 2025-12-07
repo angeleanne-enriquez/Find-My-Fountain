@@ -1,0 +1,140 @@
+{{!-- 
+  profile.handlebars
+  User profile page for Find My Fountain.
+  Shows basic user info, favorites, and reviews.
+  If the logged-in user is viewing their own profile,
+  a simple settings/edit section is also displayed.
+--}}
+
+<section class="page-container card">
+  {{!-- Basic profile info --}}
+  <header>
+    <h1>{{profileUser.username}}'s Profile</h1>
+
+    {{#if profileUser.picture}}
+      <img
+        src="{{profileUser.picture}}"
+        alt="{{profileUser.username}}'s profile picture"
+        class="profile-picture"
+      />
+    {{/if}}
+
+    <p><strong>Name:</strong> {{profileUser.firstName}} {{profileUser.lastName}}</p>
+
+    {{#if profileUser.bio}}
+      <p><strong>Bio:</strong> {{profileUser.bio}}</p>
+    {{else}}
+      <p><strong>Bio:</strong> This user has not added a bio yet.</p>
+    {{/if}}
+  </header>
+
+  <hr />
+
+  {{!-- Favorite fountains --}}
+  <section>
+    <h2>Favorite Fountains</h2>
+
+    {{#if favorites}}
+      {{#if favorites.length}}
+        <ul>
+          {{#each favorites}}
+            <li>
+              <a href="/fountains/{{this.id}}">{{this.name}}</a>
+              {{!-- Like/dislike buttons (can be wired later) --}}
+              <form action="/fountains/{{this.id}}/like" method="POST" style="display:inline;">
+                <button type="submit">Like</button>
+              </form>
+              <form action="/fountains/{{this.id}}/dislike" method="POST" style="display:inline;">
+                <button type="submit">Dislike</button>
+              </form>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p>This user has no favorite fountains yet.</p>
+      {{/if}}
+    {{else}}
+      <p>This user has no favorite fountains yet.</p>
+    {{/if}}
+  </section>
+
+  <hr />
+
+  {{!-- Reviews --}}
+  <section>
+    <h2>Reviews</h2>
+
+    {{#if reviews}}
+      {{#if reviews.length}}
+        <ul>
+          {{#each reviews}}
+            <li>
+              <p>
+                <strong>Fountain:</strong>
+                <a href="/fountains/{{this.fountainId}}">{{this.fountainName}}</a>
+              </p>
+              <p><strong>Rating:</strong> {{this.rating}} / 5</p>
+              <p>{{this.text}}</p>
+
+              {{!-- Only show edit/delete if this review is editable by the current user --}}
+              {{#if this.canEdit}}
+                <form action="/reviews/{{this.id}}/edit" method="GET" style="display:inline;">
+                  <button type="submit">Edit</button>
+                </form>
+                <form action="/reviews/{{this.id}}/delete" method="POST" style="display:inline;">
+                  <button type="submit">Delete</button>
+                </form>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p>This user has not written any reviews yet.</p>
+      {{/if}}
+    {{else}}
+      <p>This user has not written any reviews yet.</p>
+    {{/if}}
+  </section>
+
+  <hr />
+
+  {{!-- Settings for your own profile --}}
+  {{#if isOwnProfile}}
+    <section>
+      <h2>Profile Settings</h2>
+      <p>You can update your bio and profile picture here.</p>
+
+      <form action="/user/{{profileUser.id}}" method="POST">
+        <div class="form-group">
+          <label for="bio">Bio:</label>
+          <input
+            type="text"
+            id="bio"
+            name="bio"
+            value="{{profileUser.bio}}"
+            placeholder="Update your bio"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="picture">Profile Picture (path or URL):</label>
+          <input
+            type="text"
+            id="picture"
+            name="picture"
+            value="{{profileUser.picture}}"
+            placeholder="Update your picture path or URL"
+          />
+        </div>
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </section>
+  {{/if}}
+
+  <hr />
+
+  <p>
+    <a href="/">Back to Landing Page</a>
+  </p>
+</section>
