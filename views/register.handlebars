@@ -1,0 +1,156 @@
+{{!-- 
+  This template renders the sign-up form for Find My Fountain.
+  Users create an account with basic profile info so they can
+  leave reviews and save favorite fountains.
+--}}
+
+<section class="page-container card">
+  <h1>Create Your Find My Fountain Account</h1>
+
+  <p>Sign up to review fountains, save favorites, and share your hydration experiences.</p>
+
+  <div class="link-row">
+    <a href="/login" class="link">Already have an account? Click here to sign in</a>
+    <a href="/">Back to Home</a>
+  </div>
+
+  <form name="signup-form" id="signup-form" action="/register" method="POST">
+    {{!-- First Name --}}
+    <div class="form-group">
+      <label for="firstName">First Name:</label>
+      <input
+        type="text"
+        name="firstName"
+        id="firstName"
+        placeholder="First Name"
+      />
+      {{#if errors}}
+        {{#if errors.firstName}}
+          <p class="error">{{errors.firstName}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Last Name --}}
+    <div class="form-group">
+      <label for="lastName">Last Name:</label>
+      <input
+        type="text"
+        name="lastName"
+        id="lastName"
+        placeholder="Last Name"
+      />
+      {{#if errors}}
+        {{#if errors.lastName}}
+          <p class="error">{{errors.lastName}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Email --}}
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="Email address"
+      />
+      {{#if errors}}
+        {{#if errors.email}}
+          <p class="error">{{errors.email}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Username --}}
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        name="username"
+        id="username"
+        placeholder="Choose a username"
+      />
+      {{#if errors}}
+        {{#if errors.username}}
+          <p class="error">{{errors.username}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Password --}}
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Password"
+      />
+      {{#if errors}}
+        {{#if errors.password}}
+          <p class="error">{{errors.password}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Confirm Password --}}
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password:</label>
+      <input
+        type="password"
+        name="confirmPassword"
+        id="confirmPassword"
+        placeholder="Confirm Password"
+      />
+      {{#if errors}}
+        {{#if errors.confirmPassword}}
+          <p class="error">{{errors.confirmPassword}}</p>
+        {{/if}}
+        {{#if errors.match}}
+          <p class="error">{{errors.match}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Bio (optional) --}}
+    <div class="form-group">
+      <label for="bio">Bio (optional):</label>
+      <input
+        type="text"
+        name="bio"
+        id="bio"
+        placeholder="Tell us a bit about yourself (e.g., I love drinking water!)"
+      />
+      {{#if errors}}
+        {{#if errors.bio}}
+          <p class="error">{{errors.bio}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Picture path / URL (optional) --}}
+    <div class="form-group">
+      <label for="picture">Profile Picture (optional, path or URL):</label>
+      <input
+        type="text"
+        name="picture"
+        id="picture"
+        placeholder="Path or URL to your profile picture"
+      />
+      {{#if errors}}
+        {{#if errors.picture}}
+          <p class="error">{{errors.picture}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    <button type="submit" name="submitButton" id="submitButton">Create Account</button>
+    <button type="reset">Clear Form</button>
+  </form>
+
+  {{#if error}}
+    <p class="error">{{error}}</p>
+  {{/if}}
+</section>

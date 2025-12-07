@@ -1,0 +1,51 @@
+{{!-- 
+  This is the main landing page for Find My Fountain.
+  It explains the purpose of the site and provides a simple
+  starting point to search for fountains.
+--}}
+
+<section class="page-container card">
+  <h1>Welcome to Find My Fountain</h1>
+
+  <p>
+    Find My Fountain helps you locate public drinking fountains near you.
+    Search by name, park, or neighborhood and see details, ratings, and reviews
+    from other users. Create an account to save your favorite fountains and
+    share your own experiences.
+  </p>
+
+  {{!-- Auth-related links --}}
+  {{#if user}}
+    <p>
+      Logged in as <strong>{{user.username}}</strong>.
+      <a href="/profile">Go to your profile</a>
+    </p>
+  {{else}}
+    <p>
+      <a href="/login">Log in</a> or
+      <a href="/register">create an account</a> to save favorites and leave reviews.
+    </p>
+  {{/if}}
+
+  {{!-- Simple search prompt --}}
+  <section>
+    <h2>Start Searching for Fountains</h2>
+    <form id="landing-search-form" action="/search" method="GET">
+      <div class="form-group">
+        <label for="searchQuery">Search by name, park, or area:</label>
+        <input
+          type="text"
+          name="q"
+          id="searchQuery"
+          placeholder="e.g., Central Park, Brooklyn, playground"
+        />
+      </div>
+
+      <button type="submit">Search Fountains</button>
+    </form>
+
+    <p>
+      Or you can <a href="/search">browse fountains</a> directly.
+    </p>
+  </section>
+</section>

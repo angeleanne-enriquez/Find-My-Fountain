@@ -1,0 +1,156 @@
+{{!--
+  Shows information about a single fountain:
+  location, average ratings, operational status, favorites,
+  and user reviews. Logged-in users can write a review,
+  mark the fountain as working, and like/dislike the fountain.
+--}}
+
+<section class="page-container card">
+  <h1>Fountain Details</h1>
+
+  {{!-- Basic fountain info --}}
+  <p><strong>Borough:</strong> {{fountain.borough}}</p>
+
+  <p>
+    <strong>Location:</strong>
+    {{locationDisplay}}
+  </p>
+
+  <p><strong>Number of Favorites:</strong> {{fountain.numFavorites}}</p>
+
+  {{!-- Average ratings (if available) --}}
+  {{#if fountain.avgRatings}}
+    <h2>Average Ratings</h2>
+    <ul>
+      <li><strong>Taste:</strong> {{fountain.avgRatings.taste}}</li>
+      <li><strong>Location:</strong> {{fountain.avgRatings.location}}</li>
+      <li><strong>Pressure:</strong> {{fountain.avgRatings.pressure}}</li>
+      <li><strong>Cleanliness:</strong> {{fountain.avgRatings.cleanliness}}</li>
+      <li><strong>Accessibility:</strong> {{fountain.avgRatings.accesibility}}</li>
+      <li>
+        <strong>Operational:</strong>
+        {{#if fountain.avgRatings.operational}}
+          Yes
+        {{else}}
+          No
+        {{/if}}
+      </li>
+    </ul>
+  {{/if}}
+
+  {{!-- Like / Dislike fountain (only if logged in) --}}
+  {{#if user}}
+    <section>
+      <h2>Do you like this fountain?</h2>
+
+      <form action="/fountain/{{fountain._id}}/like" method="POST">
+        <button type="submit">Like</button>
+      </form>
+
+      <form action="/fountain/{{fountain._id}}/dislike" method="POST">
+        <button type="submit">Dislike</button>
+      </form>
+
+      {{#if likeError}}
+        <p class="error">{{likeError}}</p>
+      {{/if}}
+    </section>
+  {{/if}}
+
+  <hr>
+
+  {{!-- Reviews list --}}
+  <section>
+    <h2>Reviews</h2>
+
+    {{#if reviews}}
+      {{#if reviews.length}}
+        <ul>
+          {{#each reviews}}
+            <li>
+              <p>
+                <strong>Reviewer:</strong> {{this.username}}
+                {{#if this.date}}
+                  - {{this.date}}
+                {{/if}}
+              </p>
+              {{#if this.rating}}
+                <p><strong>Rating:</strong> {{this.rating}} / 5</p>
+              {{/if}}
+              <p>{{this.text}}</p>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p>No reviews yet. Be the first to review this fountain!</p>
+      {{/if}}
+    {{else}}
+      <p>No reviews yet. Be the first to review this fountain!</p>
+    {{/if}}
+  </section>
+
+  <hr>
+
+  {{!-- Write a review + mark operational (only if logged in) --}}
+  {{#if user}}
+    <section>
+      <h2>Write a Review</h2>
+
+      {{#if reviewError}}
+        <p class="error">{{reviewError}}</p>
+      {{/if}}
+
+      <form action="/fountain/{{fountain._id}}" method="POST" id="review-form" name="review-form">
+        <div class="form-group">
+          <label for="rating">Rating (1–5):</label>
+          <input
+            type="number"
+            id="rating"
+            name="rating"
+            min="1"
+            max="5"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="reviewText">Your Review:</label>
+          <textarea
+            id="reviewText"
+            name="reviewText"
+            rows="4"
+            cols="40"
+            placeholder="Share your thoughts about this fountain..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="operational">
+            <input
+              type="checkbox"
+              id="operational"
+              name="operational"
+              value="true"
+            >
+            Mark this fountain as working
+          </label>
+        </div>
+
+        <button type="submit">Submit Review</button>
+      </form>
+    </section>
+  {{else}}
+    <p>
+      <a href="/login">Log in</a> or
+      <a href="/register">create an account</a> to write a review,
+      mark this fountain as working, and like/dislike this fountain.
+    </p>
+  {{/if}}
+
+  <hr>
+
+  <p>
+    <a href="/">Back to Landing Page</a>
+    |
+    <a href="/search">Back to Search Results</a>
+  </p>
+</section>

@@ -1,0 +1,28 @@
+{{!-- 
+  This is the base layout template used by all pages.
+  It loads global styling, provides a navigation bar,
+  and injects each page's unique content inside {{{body}}}.
+--}}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/public/css/styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <a href="/">Landing Page</a>
+        <a href="/search">Search</a>
+        <a href="/profile">Profile</a>
+      </nav>
+    </header>
+
+    <main>
+      {{{body}}}
+    </main>
+  </body>
+</html>

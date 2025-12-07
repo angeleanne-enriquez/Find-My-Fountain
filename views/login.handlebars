@@ -1,0 +1,67 @@
+{{!-- 
+  login.handlebars
+  This template renders the sign-in form for Find My Fountain.
+  Users provide their user ID and password to log in.
+--}}
+
+<section class="page-container card">
+  <h1>Sign In to Find My Fountain</h1>
+
+  <p>Log in to save your favorite fountains, leave reviews, and track your activity.</p>
+
+  <div class="link-row">
+    <a href="/register" class="link">Don't have an account? Click here to sign up!</a>
+  </div>
+
+  <form
+    id="signin-form"
+    name="signin-form"
+    action="/login"
+    method="POST"
+  >
+    {{!-- userId --}}
+    <div class="form-group">
+      <label for="userId">User ID:</label>
+      <input
+        type="text"
+        name="userId"
+        id="userId"
+        placeholder="Enter your user ID"
+      />
+      {{#if errors}}
+        {{#if errors.userId}}
+          <p class="error">{{errors.userId}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- password --}}
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Enter your password"
+      />
+      {{#if errors}}
+        {{#if errors.password}}
+          <p class="error">{{errors.password}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    <button
+      type="submit"
+      name="submit_button"
+      id="submit_button"
+    >
+      Sign In
+    </button>
+  </form>
+
+  {{!-- generic error for invalid login, etc. --}}
+  {{#if error}}
+    <p class="error">{{error}}</p>
+  {{/if}}
+</section>
