@@ -5,6 +5,7 @@ import fountainRoutes from "./fountainRoutes.js";
 import userRoutes from "./userRoutes.js";
 import registerRoutes from './registerRoutes.js'
 
+
 const configRoutes = (app) => {
   app.use("/", landingRoutes);
   app.use("/", fountainRoutes)

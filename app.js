@@ -14,6 +14,7 @@ import configRoutes from "./routes/index.js";
 import exphbs from "express-handlebars";
 import fileUpload from "express-fileupload";
 
+
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
@@ -54,10 +55,19 @@ app.use("/login", async (req, res, next) => {
    next();
 });
 
-//for login page 
+
+//for register page 
 app.use("/register", async (req, res, next) => {
   next();
 });
+
+
+//for fountain page
+app.use("/fountain/:id", async (req, res, next) => {
+  next();
+});
+
+
 //setting up the handlebars
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");

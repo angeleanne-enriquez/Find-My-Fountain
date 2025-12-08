@@ -18,7 +18,7 @@
   {{#if user}}
     <p>
       Logged in as <strong>{{user.username}}</strong>.
-      <a href="/profile">Go to your profile</a>
+      <a href="/user/{{user._id}}">Go to your profile</a>
     </p>
   {{else}}
     <p>

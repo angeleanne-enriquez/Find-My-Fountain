@@ -13,7 +13,7 @@ import {
 } from "../data/users.js";
 // NEED TO ADD VALIDATION CHECKERS
 
-router.route("Find-My-Fountain/user/:id").get(async (req, res) => {
+router.route("/user/:id").get(async (req, res) => {
   //code here for GET
   try {
     if (!req.params.id || req.params.id === "")
@@ -34,7 +34,7 @@ router.route("Find-My-Fountain/user/:id").get(async (req, res) => {
     //   privacy = userName.privacy;,
     //   role = userName.role;
 
-    return res.status(200).render("user", {
+    return res.status(200).render("profile", {
       //returns page with that info
       title: `User: ${username}`,
       firstName,
@@ -59,7 +59,7 @@ router.route("Find-My-Fountain/user/:id").get(async (req, res) => {
 });
 
 router
-  .route("Find-My-Fountain/user/:id/settings")
+  .route("/user/:id/settings")
   .get(async (req, res) => {
     try {
       if (!req.params.id || req.params.id === "")
