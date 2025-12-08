@@ -1,14 +1,16 @@
 import { Router } from "express";
 const router = Router();
-import * as h from "../helpers.js";
 
-router.route('/login').get(async (req, res) => {
+//Main register page
+//NEEDS TO BE COMPLETED
+router.route('/register').get(async (req, res) => {
     try {
-        return res.render('login')
+        return res.render('register')
     }catch(e){
         //error message
         return res.status(403).render("error", {error:e})
         }
 })
+
 
 export default router;

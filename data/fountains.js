@@ -1,5 +1,5 @@
 import * as h from "../helpers.js";
-
+import {fountains, reviews} from '../config/mongoCollections.js'
 //Add a review to the fountain and update its ratings
 export const addReview = async (fountainId, reviewId) => {
     //Validate fountainId
@@ -86,3 +86,6 @@ export const getFountain = async(id) => {
     }
     return fountain
 }
+
+export default getFountain
+

@@ -51,15 +51,12 @@ app.use("/user/:id", async (req, res, next) => {
 
 //for login page 
 app.use("/login", async (req, res, next) => {
-  if (!req.params.id) return res
-      .status(403)
-      .render("error", {
-        title: "Error",
-        errorMessages: "Error: no id was given.",
-        errorClass: "error",
-        link: "/user",
-      });
-  else next();
+   next();
+});
+
+//for login page 
+app.use("/register", async (req, res, next) => {
+  next();
 });
 //setting up the handlebars
 app.engine("handlebars", exphbs.engine());

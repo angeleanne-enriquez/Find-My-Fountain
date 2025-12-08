@@ -3,6 +3,7 @@ const router = Router();
 import * as h from "../helpers.js";
 import getFountain from "../data/fountains.js";
 
+
 router.route('/fountain/:id').get(async (req, res) => {
     try {
         //checking if fountain exists
@@ -15,3 +16,4 @@ router.route('/fountain/:id').get(async (req, res) => {
         return res.status(403).render("error", {error:e})
         }
 })
+export default router;
