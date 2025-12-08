@@ -1,0 +1,56 @@
+/*This file should have 10 CSS rulesets */
+* {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    font-size: 14pt;
+  }
+  
+  body {
+    background: #ecd9dc;
+    font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
+  }
+  
+  main {
+    max-width: 75%;
+    margin: auto;
+  }
+  
+  header {
+    border-bottom: 1px solid #afafaf;
+  }
+  
+  h1{
+    color: #260749;
+    margin-bottom: 5px;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  
+  p {
+    font-size: 1rem;
+    line-height: 2;
+    color:blue
+  }
+
+  a{
+    color:orange
+  }
+  
+  img{
+    height: 117px;
+    width: 75px;
+  }
+
+  a:visited{
+    color:darkgreen
+  }
+
+  a:hover{
+    color:slateblue
+  }

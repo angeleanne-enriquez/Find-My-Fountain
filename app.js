@@ -37,7 +37,7 @@ app.use(
     b. EXTRA FEATURE: if private, throw error 
     c. if no id was provided, throw error 
 */
-app.use("/Find-My-Fountain/user/:id", async (req, res, next) => {
+app.use("/user/:id", async (req, res, next) => {
   if (!req.params.id) return res
       .status(403)
       .render("error", {
@@ -49,6 +49,18 @@ app.use("/Find-My-Fountain/user/:id", async (req, res, next) => {
   else next();
 });
 
+//for login page 
+app.use("/login", async (req, res, next) => {
+  if (!req.params.id) return res
+      .status(403)
+      .render("error", {
+        title: "Error",
+        errorMessages: "Error: no id was given.",
+        errorClass: "error",
+        link: "/user",
+      });
+  else next();
+});
 //setting up the handlebars
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
