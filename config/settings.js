@@ -2,5 +2,5 @@
 
 export const mongoConfig = {
   serverUrl: "mongodb://localhost:27017/",
-  database: "Fountain_Users", //ADD THE REVIEWS AND FOUNTAINS 
+  database: "FindMyFountain", //ADD THE REVIEWS AND FOUNTAINS 
 };
