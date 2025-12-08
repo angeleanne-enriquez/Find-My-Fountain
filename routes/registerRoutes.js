@@ -10,15 +10,15 @@ import {
   } from "../data/users.js";
 
 //Main register page
-//NEEDS TO BE COMPLETED - JACKSON TULLMAN
 router.route('/register').get(async (req, res) => {
     try {
         return res.status(200).render('register')
     }catch(e){
         //error message
-        return res.status(403).render("error", {error:e})
+        return res.status(403).render("error hello testing", {error:e})
         }
 })
+//WIP 
 //DISPLAYS ERRORS NOW BUT GETTING "h is not defined" LIKELY VALIDATION ERROR
 .post(async (req, res) => {
     try {

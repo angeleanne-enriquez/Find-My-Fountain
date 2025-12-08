@@ -2,6 +2,8 @@ import { Router } from "express";
 const router = Router();
 import * as h from "../helpers.js";
 
+
+//WIP 
 router.route('/login').get(async (req, res) => {
     try {
         return res.render('login')
