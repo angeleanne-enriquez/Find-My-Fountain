@@ -8,11 +8,15 @@
   "main": "helpers.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm app.js"
+    "start": "node app.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
     "express-fileupload": "^1.5.2",
+    "express-handlebars": "^8.0.4",
+    "express-session": "^1.18.2",
     "validator": "^13.15.23"
   }
 }

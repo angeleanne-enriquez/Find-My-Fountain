@@ -52,7 +52,7 @@ router.route("Find-My-Fountain/user/:id").get(async (req, res) => {
       //renders error page if there is an error
       title: "User",
       errorMessages: e,
-      errorClass: "error",
+      errorClass: "error", 
     });
   }
 });
