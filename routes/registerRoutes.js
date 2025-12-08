@@ -13,12 +13,13 @@ import {
 //NEEDS TO BE COMPLETED - JACKSON TULLMAN
 router.route('/register').get(async (req, res) => {
     try {
-        return res.render('register')
+        return res.status(200).render('register')
     }catch(e){
         //error message
         return res.status(403).render("error", {error:e})
         }
 })
+//DISPLAYS ERRORS NOW BUT GETTING "h is not defined" LIKELY VALIDATION ERROR
 .post(async (req, res) => {
     try {
         //define registration terms
@@ -32,7 +33,7 @@ router.route('/register').get(async (req, res) => {
         //registering 
         let newUser = await registerUsers(firstName,lastName,email,username,password,bio,picture)
         //take back to home but now logged in 
-        return res.status('landingPage', {user:newUser})
+        return res.status(200).render('landingPage', {user:newUser})
     }catch(e){
         //error message
         return res.status(403).render("error", {error:e})
