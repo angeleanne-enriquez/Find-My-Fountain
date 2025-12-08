@@ -75,3 +75,14 @@ export const calculateAverages = async (reviews) => {
 
     return avgRatings;
 };
+
+//getting fountain
+export const getFountain = async(id) => {
+    h.checkValidID(id)
+    const fountainCollection = await fountains();
+    const fountain = await fountainCollection.findOne({"_id": fountainId});
+    if (!fountain){
+        throw "Fountain not found!"
+    }
+    return fountain
+}

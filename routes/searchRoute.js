@@ -4,13 +4,16 @@ import * as h from "../helpers.js";
 
 
 //Search page
-router.route('/Find-My-Fountain/search').post(async (req, res) => {
-    //search may be a different name CHANGE LATER
-    let searchInput = req.body.search
-    
-    //validate input
-    h.checkValidString(searchInput)
-
+router.route('/search').get(async (req, res) => {
+    try {
+        //searching
+        search = req.body.q
+        //leads to search page
+        res.render('searchResults', search)
+    }catch(e){
+        //error message
+        return res.status(403).render("error", {error:e})
+        }
 })
 
 export default router;

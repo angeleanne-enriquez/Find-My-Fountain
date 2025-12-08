@@ -20,3 +20,5 @@ NOTE: YOU WILL NEED TO CHANGE THE CODE BELOW AND UNCOMMENT IT TO HAVE THE COLLEC
 
 //ADD FOUNTAINS AND REVIEWS COLLECTIONS 
 export const users = getCollectionFn("users");
+export const fountains = getCollectionFn('fountains');
+export const reviews = getCollectionFn('reviews');
