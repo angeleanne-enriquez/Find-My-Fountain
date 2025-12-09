@@ -1,56 +1,68 @@
 /*This file should have 10 CSS rulesets */
+:root {
+  --background: #ecd9dc;
+  --border: #afafaf;
+
+  --header: #260749;
+  --font: blue;
+
+  --link: orange;
+  --linkVisited: darkgreen;
+  --linkHover: slateblue;
+}
+
 * {
-    box-sizing: border-box;
-  }
-  
-  html,
-  body {
-    font-size: 14pt;
-  }
-  
-  body {
-    background: #ecd9dc;
-    font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
-  }
-  
-  main {
-    max-width: 75%;
-    margin: auto;
-  }
-  
-  header {
-    border-bottom: 1px solid #afafaf;
-  }
-  
-  h1{
-    color: #260749;
-    margin-bottom: 5px;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-  }
-  
-  
-  p {
-    font-size: 1rem;
-    line-height: 2;
-    color:blue
-  }
+  box-sizing: border-box;
+}
 
-  a{
-    color:orange
-  }
-  
-  img{
-    height: 117px;
-    width: 75px;
-  }
+html,
+body {
+  font-size: 14pt;
+}
 
-  a:visited{
-    color:darkgreen
-  }
+body {
+  background: var(--background);
+  font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
+}
 
-  a:hover{
-    color:slateblue
-  }
+main {
+  max-width: 75%;
+  margin: auto;
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+}
+
+h1{
+  color: var(--header);
+  margin-bottom: 5px;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+
+p {
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--font);
+}
+
+a{
+  color:var(--link);
+}
+
+img{
+  height: 117px;
+  width: 75px;
+}
+
+a:visited{
+  color: var(--linkVisited);
+}
+
+a:hover{
+  color: var(--linkHover);
+}
