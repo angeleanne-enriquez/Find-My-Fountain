@@ -46,6 +46,33 @@ router
   })
   .post(async (req, res) => {
     // code here for POST login (authenticate user)
+    try{
+      //field validation
+      if (!req.body.userId){
+        return res.status(403).render("login", {error:"must fill in username"})
+       }
+      if (!req.body.password){
+        return res.status(403).render("login", {error:"must fill in password"})
+      }
+      //login
+      let didLogin = await usersData.login(req.body.userId,req.body.password)
+      if (didLogin){
+        req.session.user = {
+          username:didLogin.username,
+          firstName:didLogin.firstName,
+          lastName:didLogin.lastName,
+          email: didLogin.email,
+          bio:didLogin.bio,
+          picture:didLogin.picture
+        }
+        return res.redirect(`/user/${req.session.user["_id"]}`)
+      } else {
+        //error message
+        return res.status(403).render("error", {error:"login error"})
+      }
+    } catch(e){
+      return res.status(403).render("error", {error:e})
+    }
   });
 
 
@@ -88,6 +115,7 @@ router
   .route('/logout')
   .get(async (req, res) => {
     // code here for GET logout (clear session, redirect or render page)
+    
   });
 
 
