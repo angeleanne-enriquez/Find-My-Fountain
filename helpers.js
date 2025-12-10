@@ -44,15 +44,15 @@ export const checkValidBoolean = (bool, errorName) => {
 
 //Validate email
 export const checkValidEmail = (email, errorName) => {
-    email = h.checkValidString(email, null, null, "errorName");
-    if (!(v.isEmail(email_address))) throw `${errorName} must be in a valid format!`;
+    email = checkValidString(email, null, null, "errorName");
+    if (!(v.isEmail(email))) throw `${errorName} must be in a valid format!`;
 
     return email;
 };
 
 //Validate password
 export const checkValidPassword = (password, min, max, errorName) => {
-    password = h.checkValidString(password, min, max, errorName);
+    password = checkValidString(password, min, max, errorName);
 
     //Check for no spaces, at least one capital letter, one number, and one special character
     if (!/[A-Z]/.test(password)) throw `${errorName} needs at least one capital letter!`;

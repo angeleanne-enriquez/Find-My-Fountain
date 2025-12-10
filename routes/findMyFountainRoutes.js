@@ -100,7 +100,7 @@ router
             let bio = req.body.bio
             let picture = req.body.picture
             //registering 
-            let newUser = await usersData.registerUsers(firstName,lastName,email,username,password,bio,picture)
+            let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture)
             //take back to home but now logged in 
             return res.status(200).render('landingPage', {user:newUser})
         } catch(e) {
