@@ -11,7 +11,22 @@ router
   .route('/')
   .get(async (req, res) => {
     // code here for GET landing page
-
+    try {
+        let user = null;
+        if (req.session && req.session.user) {
+          user = req.session.user;
+        }
+  
+        return res.status(200).render('landingPage', {
+          title: 'Find My Fountain',
+          user: user
+        });
+      } catch (e) {
+        return res.status(500).render('error', {
+          title: 'Error',
+          error: 'Internal Server Error'
+        });
+      }
   });
 
 
