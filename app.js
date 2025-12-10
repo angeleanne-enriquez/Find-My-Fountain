@@ -53,7 +53,6 @@ app.use("/user/:id", async (req, res, next) => {
 //for login page 
 app.use("/login", async (req, res, next) => {
   if (req.session.user) return res.redirect(`/user/${req.session.user["_id"]}`);
-
   next();
 });
 
@@ -68,6 +67,11 @@ app.use("/register", async (req, res, next) => {
 
 //for fountain page
 app.use("/fountain/:id", async (req, res, next) => {
+  next();
+});
+
+//for search page
+app.use("/search", async (req, res, next) => {
   next();
 });
 

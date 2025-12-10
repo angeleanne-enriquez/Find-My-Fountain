@@ -32,10 +32,17 @@ router
 
 
 /* ========== Auth: Login / Register / Logout ========== */
+//WIP
 router
   .route('/login')
   .get(async (req, res) => {
     // code here for GET login page
+    try {
+      return res.render('login')
+    }catch(e){
+      //error message
+      return res.status(403).render("error", {error:e})
+      }
   })
   .post(async (req, res) => {
     // code here for POST login (authenticate user)
@@ -89,6 +96,15 @@ router
 // POST /search
 router
   .route('/search')
+  .get(async(req,res) => {
+    try {
+      //leads to search page
+      res.render('search')
+    }catch(e){
+      //error message
+      return res.status(403).render("error", {error:e})
+      }
+  })
   .post(async (req, res) => {
     // code here for POST search (use filters, return searchResults view)
   });
