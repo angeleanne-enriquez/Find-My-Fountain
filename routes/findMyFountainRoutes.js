@@ -251,9 +251,9 @@ router
     } catch (e) {
       return res.status(403).render("error", {
         //renders error page if there was an error
-        title: "User",
+        title: "Settings",
         errorMessages: e,
-        errorClass: "error",
+        errorClass: "settingsError",
       });
     }
   })
@@ -274,9 +274,11 @@ router
         { name: "newLast", value: req.body.lastName },
         { name: "newEmail", value: req.body.email },
         { name: "newPassword", value: req.body.password },
+        { name: "newConfirmPassword", value: req.body.confirmPassword },
         { name: "newBio", value: req.body.bio },
         { name: "newPic", value: req.body.picture },
-      ]; // { name: "newPrivacy", value: req.body.newPrivacy }
+        { name: "newPrivacy", value: req.body.newPrivacy }
+      ]; 
       let missingFields = [];
 
       settingsFields.forEach((element) => {
@@ -292,6 +294,7 @@ router
       let newLast = req.body.lastName;
       let newEmail = req.body.email; 
       let newPassword = req.body.password;
+      let newConfirmPassword = req.body.confirmPassword;
       let newBio = req.body.bio;
       let newPic = req.body.pic;
       let newPrivacy = req.body.privacy;
@@ -302,6 +305,7 @@ router
         newLast,
         newEmail,
         newPassword,
+        newConfirmPassword,
         newUsername,
         newBio,
         newPic,
@@ -321,9 +325,9 @@ router
     } catch (e) {
       return res.status(403).render("error", {
         //renders error page if there was an error
-        title: "User",
+        title: "Settings",
         errorMessages: e,
-        errorClass: "error",
+        errorClass: "settingsError",
       });
     }
   });

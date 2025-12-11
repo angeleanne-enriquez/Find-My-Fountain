@@ -200,6 +200,7 @@ export const editSettings = async (
   newLast,
   newEmail,
   newPassword,
+  newConfirmPassword,
   newUsername,
   newBio,
   newPic,
@@ -213,6 +214,7 @@ export const editSettings = async (
     typeof newLast !== "string" ||
     typeof newEmail !== "string" ||
     typeof newPassword !== "string" ||
+    typeof newConfirmPassword !== "string" ||
     typeof newUsername !== "string" ||
     typeof newBio !== "string" ||
     typeof newPrivacy !== "string"
@@ -224,6 +226,7 @@ export const editSettings = async (
     if(newEmail.trim() !== "" && !h.checkValidEmail(newEmail, "New Email")) throw "Error: not a valid newEmail";
 
     if(newPassword.trim() !== "" && !h.checkValidPassword(newPassword, "New Password")) throw "Error: not a valid newPassword";
+    if(newPassword !== "" && newConfirmPassword  !== "" && newConfirmPassword !== newPassword) throw "Error: passwords do no match"
 
     if(newUsername.trim() !==  "" && !h.checkValidString(newUsername, 2, 20, "Username")) throw "Error: not a valid newUsername";
     

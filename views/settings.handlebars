@@ -1,0 +1,47 @@
+
+<h1>Settings Page</h1>
+
+    <main>
+        <p id="settingsError">{{#if errorMessages}} {{errorMessages}} {{/if}}</p>
+        <p id="settingsUpdated">{{#if message}} {{message}} {{/if}}</p>
+
+        <p>Fill out the fields below to update your account settings.</p>
+
+        <form action='/user/:id/settings' method='post' id="signup-form" name="signup-form">
+
+        <label for='firstName'>New First Name:</label>
+        <br><input type='text' id='firstName' name='firstName' placeholder="New First Name"><br>
+
+        <label for='lastName'>New Last Name:</label>
+        <br><input type='text' id='lastName' name='lastName' placeholder="New Last Name"><br>
+
+        <label for='username'>New Username:</label>
+        <br><input type='text' id='username' name='username' placeholder="New Username"><br>
+        
+        <label for='password'>New Password:</label>
+        <br><input type='password' id='password' name='password' placeholder="New Password"><br>
+
+        <label for='confirmPassword'>Confirm Password:</label>
+        <br><input type='password' id='confirmPassword' name='confirmPassword' placeholder="Confirm Password"><br>
+        
+        <label for='email'>New Email:</label>
+        <br><input type='text' id='email' name='email' placeholder="New Email"><br>
+        
+        <label for='bio'>New Bio:</label>
+        <br><input type='text' id='bio' name='bio' placeholder="New Bio"><br>
+        
+        {{!-- BE ABLE TO CHANGE PHOTO --}}
+
+        <label for='privacy'>Privacy:</label>
+        <br><select id='privacy' name="privacy">
+            <option value="private">Privater</option>
+            <option value="public">Public</option>
+            </select>
+
+        <input type='submit' id='submitButton' name='submitButton' value='Register'>
+        </form>
+
+        <a href="/user/{{user._id}}">Go to your profile</a>
+        <a href="/search">Search</a>
+        <a href="/">Back to Landing Page</a>
+    </main>
