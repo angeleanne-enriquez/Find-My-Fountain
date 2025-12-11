@@ -63,7 +63,8 @@ router
           lastName:didLogin.lastName,
           email: didLogin.email,
           bio:didLogin.bio,
-          picture:didLogin.picture
+          picture:didLogin.picture,
+          id:didLogin._id
         }
         return res.redirect(`/user/${req.session.user["_id"]}`)
       } else {
@@ -186,7 +187,7 @@ router
     try {
         if (!req.params.id || req.params.id === "")
           //check if username is in the route
-          throw "Error: no username provided";
+          throw "Error: no user id provided";
     
         let username = req.params.id; //check if user exists; throws otherwise
         let user = await usersData.getUserProfile(username);
@@ -245,7 +246,7 @@ router
       let username = req.params.id; //checks if user exists
       await usersData.getUserProfile(username);
 
-      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      if(username === req.session.user._id) return res.status(200).render("settings", { title: "Settings" }); //renders status page
       else throw "Error: cannot look at user's settings that are not your own."
 
     } catch (e) {
@@ -261,11 +262,11 @@ router
   .post(async (req, res) => {
     //code here for POST
     try {
-      if (req.session.user.username !== req.params.id)
+      if (req.session.user._id !== req.params.id)
         //checks if user is the same as the one on the page to be able to edit settings
         throw "Error: Cannot edit the settings of another user";
 
-      let username = req.session.user.username;
+      let username = req.session.user._id;
 
       let settingsFields = [
         //checks if there is at least one field that is going to be edited

@@ -238,7 +238,7 @@ export const editSettings = async (
   username = username.trim().toLowerCase();
 
   let userCollection = await users();
-  let user = await userCollection.findOne({ username });
+  let user = await userCollection.findOne({ _id: username });
   if (user === null) throw "Cannot find that user";
 
   if(newUsername !=="") {
@@ -257,7 +257,7 @@ if(newEmail !== ""){
 
   //IF PARAMS WERE NOT ADDED, KEEP THE SAME -> LIKE REGISTER IN LAB 10
   let updatedUser = await userCollection.findOneAndUpdate(
-    { username },
+    { _id: username },
     {
       $set: {
         username: newUsername !== "" ? newUsername : "$$REMOVE",
