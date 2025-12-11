@@ -26,7 +26,7 @@
       <li><strong>Location:</strong> {{fountain.avgRatings.location}}</li>
       <li><strong>Pressure:</strong> {{fountain.avgRatings.pressure}}</li>
       <li><strong>Cleanliness:</strong> {{fountain.avgRatings.cleanliness}}</li>
-      <li><strong>Accessibility:</strong> {{fountain.avgRatings.accesibility}}</li>
+      <li><strong>Accessibility:</strong> {{fountain.avgRatings.accessibility}}</li>
       <li>
         <strong>Operational:</strong>
         {{#if fountain.avgRatings.operational}}
@@ -101,17 +101,67 @@
       {{/if}}
 
       <form action="/fountain/{{fountain._id}}" method="POST" id="review-form" name="review-form">
+      {{!-- Taste rating --}}
         <div class="form-group">
-          <label for="rating">Rating (1–5):</label>
+          <label for="taste">Taste (1–5):</label>
           <input
             type="number"
-            id="rating"
-            name="rating"
+            id="taste"
+            name="taste"
             min="1"
             max="5"
           >
         </div>
 
+        {{!-- Location rating --}}
+        <div class="form-group">
+          <label for="location">Location (1–5):</label>
+          <input
+            type="number"
+            id="location"
+            name="location"
+            min="1"
+            max="5"
+          >
+        </div>
+
+        {{!-- Pressure rating --}}
+        <div class="form-group">
+          <label for="pressure">Pressure (1–5):</label>
+          <input
+            type="number"
+            id="pressure"
+            name="pressure"
+            min="1"
+            max="5"
+          >
+        </div>
+
+        {{!-- Taste rating --}}
+        <div class="form-group">
+          <label for="cleanliness">Cleanliness (1–5):</label>
+          <input
+            type="number"
+            id="cleanliness"
+            name="cleanliness"
+            min="1"
+            max="5"
+          >
+        </div>
+
+        {{!-- Accessibility rating --}}
+        <div class="form-group">
+          <label for="accessibility">Accessibility (1–5):</label>
+          <input
+            type="number"
+            id="accessibility"
+            name="accessibility"
+            min="1"
+            max="5"
+          >
+        </div>
+
+        {{!-- Review text --}}
         <div class="form-group">
           <label for="reviewText">Your Review:</label>
           <textarea
@@ -123,6 +173,7 @@
           ></textarea>
         </div>
 
+        {{!-- Operational checkbox --}}
         <div class="form-group">
           <label for="operational">
             <input
