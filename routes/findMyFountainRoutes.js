@@ -63,7 +63,8 @@ router
           lastName:didLogin.lastName,
           email: didLogin.email,
           bio:didLogin.bio,
-          picture:didLogin.picture
+          picture:didLogin.picture,
+          id:didLogin._id
         }
         return res.redirect(`/user/${req.session.user["_id"]}`)
       } else {
@@ -186,7 +187,7 @@ router
     try {
         if (!req.params.id || req.params.id === "")
           //check if username is in the route
-          throw "Error: no username provided";
+          throw "Error: no user id provided";
     
         let username = req.params.id; //check if user exists; throws otherwise
         let user = await usersData.getUserProfile(username);
@@ -245,15 +246,15 @@ router
       let username = req.params.id; //checks if user exists
       await usersData.getUserProfile(username);
 
-      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      if(username === req.session.user._id) return res.status(200).render("settings", { title: "Settings" }); //renders status page
       else throw "Error: cannot look at user's settings that are not your own."
 
     } catch (e) {
       return res.status(403).render("error", {
         //renders error page if there was an error
-        title: "User",
+        title: "Settings",
         errorMessages: e,
-        errorClass: "error",
+        errorClass: "settingsError",
       });
     }
   })
@@ -261,11 +262,11 @@ router
   .post(async (req, res) => {
     //code here for POST
     try {
-      if (req.session.user.username !== req.params.id)
+      if (req.session.user._id !== req.params.id)
         //checks if user is the same as the one on the page to be able to edit settings
         throw "Error: Cannot edit the settings of another user";
 
-      let username = req.session.user.username;
+      let username = req.session.user._id;
 
       let settingsFields = [
         //checks if there is at least one field that is going to be edited
@@ -274,9 +275,11 @@ router
         { name: "newLast", value: req.body.lastName },
         { name: "newEmail", value: req.body.email },
         { name: "newPassword", value: req.body.password },
+        { name: "newConfirmPassword", value: req.body.confirmPassword },
         { name: "newBio", value: req.body.bio },
         { name: "newPic", value: req.body.picture },
-      ]; // { name: "newPrivacy", value: req.body.newPrivacy }
+        { name: "newPrivacy", value: req.body.newPrivacy }
+      ]; 
       let missingFields = [];
 
       settingsFields.forEach((element) => {
@@ -292,6 +295,7 @@ router
       let newLast = req.body.lastName;
       let newEmail = req.body.email; 
       let newPassword = req.body.password;
+      let newConfirmPassword = req.body.confirmPassword;
       let newBio = req.body.bio;
       let newPic = req.body.pic;
       let newPrivacy = req.body.privacy;
@@ -302,6 +306,7 @@ router
         newLast,
         newEmail,
         newPassword,
+        newConfirmPassword,
         newUsername,
         newBio,
         newPic,
@@ -321,9 +326,9 @@ router
     } catch (e) {
       return res.status(403).render("error", {
         //renders error page if there was an error
-        title: "User",
+        title: "Settings",
         errorMessages: e,
-        errorClass: "error",
+        errorClass: "settingsError",
       });
     }
   });

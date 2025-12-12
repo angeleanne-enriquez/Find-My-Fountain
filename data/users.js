@@ -16,9 +16,11 @@ export const registerUsers = async (
 ) => {
   //Validate firstName
   firstName = h.checkValidString(firstName, 2, 20, "First name");
+  if(!/^[A-Za-z]/.test(firstName)) throw "Error: First name can only have letters."
 
   //Validate lastName
   lastName = h.checkValidString(lastName, 2, 20, "Last name");
+  if(!/^[A-Za-z]/.test(lastName)) throw "Error: First name can only have letters."
 
   //Validate email
   email = h.checkValidEmail(email, "Email address");
@@ -200,6 +202,7 @@ export const editSettings = async (
   newLast,
   newEmail,
   newPassword,
+  newConfirmPassword,
   newUsername,
   newBio,
   newPic,
@@ -213,6 +216,7 @@ export const editSettings = async (
     typeof newLast !== "string" ||
     typeof newEmail !== "string" ||
     typeof newPassword !== "string" ||
+    typeof newConfirmPassword !== "string" ||
     typeof newUsername !== "string" ||
     typeof newBio !== "string" ||
     typeof newPrivacy !== "string"
@@ -224,6 +228,7 @@ export const editSettings = async (
     if(newEmail.trim() !== "" && !h.checkValidEmail(newEmail, "New Email")) throw "Error: not a valid newEmail";
 
     if(newPassword.trim() !== "" && !h.checkValidPassword(newPassword, "New Password")) throw "Error: not a valid newPassword";
+    if(newPassword !== "" && newConfirmPassword  !== "" && newConfirmPassword !== newPassword) throw "Error: passwords do no match"
 
     if(newUsername.trim() !==  "" && !h.checkValidString(newUsername, 2, 20, "Username")) throw "Error: not a valid newUsername";
     
@@ -235,7 +240,7 @@ export const editSettings = async (
   username = username.trim().toLowerCase();
 
   let userCollection = await users();
-  let user = await userCollection.findOne({ username });
+  let user = await userCollection.findOne({ _id: username });
   if (user === null) throw "Cannot find that user";
 
   if(newUsername !=="") {
@@ -254,7 +259,7 @@ if(newEmail !== ""){
 
   //IF PARAMS WERE NOT ADDED, KEEP THE SAME -> LIKE REGISTER IN LAB 10
   let updatedUser = await userCollection.findOneAndUpdate(
-    { username },
+    { _id: username },
     {
       $set: {
         username: newUsername !== "" ? newUsername : "$$REMOVE",
