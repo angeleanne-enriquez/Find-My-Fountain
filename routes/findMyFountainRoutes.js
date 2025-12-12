@@ -99,8 +99,9 @@ router
             let password = req.body.password
             let bio = req.body.bio
             let picture = req.body.picture
+            let privacy = req.body.privacy
             //registering 
-            let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture)
+            let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture,privacy)
             //take back to home but now logged in 
             return res.status(200).render('landingPage', {user:newUser})
         } catch(e) {
@@ -189,6 +190,8 @@ router
     
         let username = req.params.id; //check if user exists; throws otherwise
         let user = await usersData.getUserProfile(username);
+
+        if(req.session.user.username === username || user.privacy === "public"){
     
         let firstName = user.firstName; //get all the info abt the user to display on the page
         let lastName = user.lastName;
@@ -214,7 +217,8 @@ router
           //   dislikedFountains,
           //   privacy,
           //   role
-        });
+        });}
+        else throw "Error: This user is private.";
       } catch (e) {
         return res.status(403).render("error", {
           //renders error page if there is an error
@@ -241,7 +245,9 @@ router
       let username = req.params.id; //checks if user exists
       await usersData.getUserProfile(username);
 
-      return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      else throw "Error: cannot look at user's settings that are not your own."
+
     } catch (e) {
       return res.status(403).render("error", {
         //renders error page if there was an error
@@ -281,6 +287,15 @@ router
         throw `Error: Must provide at least 1 setting to update`;
 
       //updates the settings
+      let newUsername = req.body.username;
+      let newFirst = req.body.firstName;
+      let newLast = req.body.lastName;
+      let newEmail = req.body.email; 
+      let newPassword = req.body.password;
+      let newBio = req.body.bio;
+      let newPic = req.body.pic;
+      let newPrivacy = req.body.privacy;
+
       let edited = await usersData.editSettings(
         username,
         newFirst,
@@ -289,7 +304,8 @@ router
         newPassword,
         newUsername,
         newBio,
-        newPic
+        newPic,
+        newPrivacy
       );
 
       if (edited.settingsUpdated === true) {

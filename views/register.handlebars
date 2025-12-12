@@ -147,6 +147,19 @@
       {{/if}}
     </div>
 
+    <div class="form-group"></div>
+        <label for='privacy'>Privacy:</label>
+            <br><select id='privacy' name="privacy">
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+                </select>
+        {{#if errors}}
+        {{#if errors.picture}}
+          <p class="error">{{errors.picture}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+
     <button type="submit" name="submitButton" id="submitButton">Create Account</button>
     <button type="reset">Clear Form</button>
   </form>
