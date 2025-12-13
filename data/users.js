@@ -1,7 +1,7 @@
 //reformatted with prettier 
 import bcrypt from "bcrypt";
 import * as h from "../helpers.js";
-import { users } from "../config/mongoCollections.js";
+import { users, fountains, reviews } from "../config/mongoCollections.js";
 
 //Register a new user
 export const registerUsers = async (
@@ -73,7 +73,7 @@ export const registerUsers = async (
   if (!insertInfo.acknowledged || !insertInfo.insertedId)
     throw "Could not add user!";
 
-  return getUserProfile(insertInfo.insertedId);
+  return await getUserProfile(insertInfo.insertedId);
 };
 
 //Adds a fountain to a user's favorite list
@@ -151,7 +151,7 @@ export const addReview = async (reviewId, userId) => {
 //Retrieves a given user's information
 export const getUserProfile = async (userId) => {
   //Validate userId
-  userId = h.checkValidID(userId, "User id");
+  userId = h.checkValidID(userId);
 
   //Retrieve user
   const userCollection = await users();

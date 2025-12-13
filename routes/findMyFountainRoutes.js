@@ -64,7 +64,7 @@ router
           email: didLogin.email,
           bio:didLogin.bio,
           picture:didLogin.picture,
-          id:didLogin._id
+          _id:didLogin._id
         }
         return res.redirect(`/user/${req.session.user["_id"]}`)
       } else {
@@ -104,7 +104,7 @@ router
             //registering 
             let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture,privacy)
             //take back to home but now logged in 
-            return res.status(200).render('landingPage', {user:newUser})
+            return res.status(200).redirect("/login")
         } catch(e) {
             //error message
             return res.status(403).render("error", {error:e})
@@ -188,7 +188,7 @@ router
         if (!req.params.id || req.params.id === "")
           //check if username is in the route
           throw "Error: no user id provided";
-    
+
         let username = req.params.id; //check if user exists; throws otherwise
         let user = await usersData.getUserProfile(username);
 

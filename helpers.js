@@ -1,4 +1,5 @@
 import v from "validator";
+import { ObjectId } from "mongodb";
 
 //Validates the string and makes sure that it is within a given range of length (null to have no limit)
 export const checkValidString = (str, min, max, errorName) => {
@@ -28,9 +29,8 @@ export const checkValidObject = (obj, errorName) => {
 };
 
 //Validates that a given id is valid
-export const checkValidID = (id, errorName) => {
+export const checkValidID = (id) => {
     //Validates the id string
-    id = checkValidString(id, errorName);
     if (!ObjectId.isValid(id)) throw 'Invalid object ID!';
 
     return id;

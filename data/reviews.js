@@ -1,5 +1,6 @@
 import * as h from "../helpers.js";
 import * as f from "./fountains.js";
+import { users, fountains, reviews } from "../config/mongoCollections.js";
 
 //Validates a given ratings object
 export const checkValidRatings = (ratings) => {
