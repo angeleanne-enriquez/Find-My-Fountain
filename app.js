@@ -13,6 +13,7 @@ import session from "express-session";
 import configRoutes from "./routes/index.js";
 import exphbs from "express-handlebars";
 import fileUpload from "express-fileupload";
+import { seedFunc } from "./tasks/seed.js";
 
 
 const app = express();
@@ -32,6 +33,9 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+//Seed database
+await seedFunc()
 
 /*1. for get /user/:id
     a. redirect viewer to the user page with that id 
