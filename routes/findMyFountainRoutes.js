@@ -135,7 +135,7 @@ router
 
 
 
-/* ========== Search Results ========== */
+/* ========== Search ========== */
 // POST /search
 router
   .route('/search')
@@ -150,8 +150,26 @@ router
   })
   .post(async (req, res) => {
     // code here for POST search (use filters, return searchResults view)
+    try{
+      res.redirect('/searchResults')
+    } catch(e){
+      //error message
+      return res.status(403).render("error", {error:e})
+    }
   });
 
+/* ========== Search Results ========== */
+router
+  .route('/searchResults')
+  .get(async(req,res) => {
+    try {
+      //leads to search page
+      res.render('searchResults')
+    }catch(e){
+      //error message
+      return res.status(403).render("error", {error:e})
+      }
+  })
 
 /* ========== Fountain Details + Review Submission + Like/Dislike ========== */
 // GET /fountain/:id  (show fountain details)
@@ -185,10 +203,26 @@ router
             link: "/fountain",
         })
 
-        let user = req.session.user,
+        let user = null,
+            favorited = false,
             reviews = fountain.reviews;
+        
+        //checking if user already favorited it 
+        if(req.session.user) {
+            user = req.session.user;
+            
+            let userData = await usersData.getUserProfile(user.username);
+            let favorites = await userData["favorites"];
 
-        res.status(200).render('fountainDetails',fountain, user, reviews)
+            favorited = (favorites.includes(req.params.id));
+        }
+
+        return res.status(200).render('fountainDetails', {
+          fountain: fountain,
+          user: user,
+          favorited: favorited, 
+          reviews: reviews
+        });
     } catch(e) {
         return res.status(403).render("error", {error:e})
     }
@@ -256,6 +290,9 @@ router
   .route('/fountain/:id/like')
   .post(async (req, res) => {
     // code here for POST like fountain
+    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged into favorite!"});
+
+
   });
 
 router

@@ -22,11 +22,11 @@ export const seedFunc = async () => {
         let formattedResult = {};
 
         //Format the bouroughs
-        if (result["borough"] = "M") result["borough"] = "Manhattan";
-        else if (result["borough"] = "R") result["borough"] = "Staten Island";
-        else if (result["borough"] = "Q") result["borough"] = "Queens";
-        else if (result["borough"] = "B") result["borough"] = "Brooklyn";
-        else if (result["borough"] = "X") result["borough"] = "Bronx";
+        if (result["borough"] === "M") result["borough"] = "Manhattan";
+        else if (result["borough"] === "R") result["borough"] = "Staten Island";
+        else if (result["borough"] === "Q") result["borough"] = "Queens";
+        else if (result["borough"] === "B") result["borough"] = "Brooklyn";
+        else if (result["borough"] === "X") result["borough"] = "Bronx";
 
         formattedResult["borough"] = result["borough"];
 
