@@ -39,7 +39,7 @@
         <ul>
           {{#each viewUser.favorites}}
             <li>
-              <a href="/fountains/{{this._id}}">{{this.park}}, {{this.borough}}</a>
+              <a href="/fountain/{{this._id}}">{{this.park}}, {{this.borough}}</a>
             </li>
           {{/each}}
         </ul>
@@ -93,8 +93,8 @@
 
   {{!-- Settings for your own profile --}}
   {{#if isOwnProfile}}
-    <a href="/user/{{user.username}}/settings">Update your profile</a>
-
+    <a href="/user/{{user.username}}/settings">Update your profile and settings</a>
+    <a href="/logout">Log Out</a>
     <hr />
   {{/if}}
 
