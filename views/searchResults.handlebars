@@ -31,8 +31,19 @@ Page for listing fountains
             </select>
         </div>
     </form>
-    <h2>Results for {{Borough}}:</h2>
+
+    <h2>Results for {{borough}}:</h2>
+    <ol>
+    {{#each fountainBoroughs}}
       <div class="Results">
-      </div>
+        
+            <li>
+                <a href="/fountain/{{_id}}">
+                {{park}} fountain
+                </a>
+            </li>
+    {{/each}}
+    </ol>
+    </div>
       
   </section>

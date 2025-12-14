@@ -91,6 +91,36 @@ export const getFountain = async(fountainId) => {
     return fountain
 }
 
+//get fountain by borough
+export const fountainByBorough = async(borough) => {
+    if (!borough){
+        throw "Must input borough!"
+    }
+    borough = h.checkValidString(borough)
+    let lowerBorough = borough.toLowerCase()
+    if (lowerBorough != "bronx" && lowerBorough != "staten island" && lowerBorough != "manhattan" && lowerBorough != "brooklyn" && lowerBorough != "queens"){
+        throw "Borough must be a NYC borough"
+    }
+    const fountainCollection = await fountains()
+    if (borough == "manhattan"){
+        borough = "Manhattan"
+    }
+    if (borough == "queens"){
+        borough = "Queens"
+    }
+    if (borough == "staten island"){
+        borough = "Staten Island"
+    }
+    if (borough == "brooklyn"){
+        borough = "Brooklyn"
+    }
+    if (borough == "bronx"){
+        borough = "Bronx"
+    }
+    let boroughFiltered = fountainCollection.find({borough:borough}).toArray()
+    return boroughFiltered
+}
+
 export default getFountain
 
 //Takes a list of ids and returns a list of fountain info (id, park, borough)
