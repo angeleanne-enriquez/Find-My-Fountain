@@ -126,7 +126,7 @@ router
 
 
 
-/* ========== Search Results ========== */
+/* ========== Search ========== */
 // POST /search
 router
   .route('/search')
@@ -141,8 +141,26 @@ router
   })
   .post(async (req, res) => {
     // code here for POST search (use filters, return searchResults view)
+    try{
+      res.redirect('/searchResults')
+    } catch(e){
+      //error message
+      return res.status(403).render("error", {error:e})
+    }
   });
 
+/* ========== Search Results ========== */
+router
+  .route('/searchResults')
+  .get(async(req,res) => {
+    try {
+      //leads to search page
+      res.render('searchResults')
+    }catch(e){
+      //error message
+      return res.status(403).render("error", {error:e})
+      }
+  })
 
 /* ========== Fountain Details + Review Submission + Like/Dislike ========== */
 // GET /fountain/:id  (show fountain details)

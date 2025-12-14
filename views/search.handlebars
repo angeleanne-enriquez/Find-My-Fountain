@@ -3,19 +3,16 @@
     <h2>Start Searching for Fountains</h2>
     <form id="landing-search-form" action="/search" method="GET">
       <div class="form-group">
-        <label for="searchQuery">Search by name, park, or area:</label>
+        <label for="searchQuery">Search by borough:</label>
         <input
           type="text"
           name="q"
           id="searchQuery"
-          placeholder="e.g., Central Park, Brooklyn, playground"
+          placeholder="Bronx, Brooklyn, Manhatten, Staten Island, Queens"
+          {{!In DB Brooklyn;  Manhattan; Queens; = Staten Island; Bronx}}
         />
       </div>
 
       <button type="submit">Search Fountains</button>
     </form>
-
-{{!MAP IMPLEMENTATION GOES HERE}}
-
-    
   </section>
