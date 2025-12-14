@@ -40,6 +40,11 @@
           {{#each viewUser.favorites}}
             <li>
               <a href="/fountain/{{this._id}}">{{this.park}}, {{this.borough}}</a>
+              {{#if ../isOwnProfile}}
+                <form action="/fountain/{{this._id}}/dislike" method="POST">
+                  <button type="submit">Unfavorite</button>
+                </form>
+              {{/if}}
             </li>
           {{/each}}
         </ul>

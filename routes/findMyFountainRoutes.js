@@ -297,7 +297,7 @@ router
 
     await usersData.addFavoriteFountain(fountainId, user.username);
 
-    res.redirect(`/fountain/${fountainId}`);
+    res.redirect(req.get("referer"));
   });
 
 router
@@ -311,7 +311,7 @@ router
 
     await usersData.removeFavoriteFountain(fountainId, user.username);
 
-    res.redirect(`/fountain/${fountainId}`);
+    res.redirect(req.get("referer"));
   });
 
 
