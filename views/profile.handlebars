@@ -39,14 +39,7 @@
         <ul>
           {{#each viewUser.favorites}}
             <li>
-              <a href="/fountains/{{this.id}}">{{this.name}}</a>
-              {{!-- Like/dislike buttons (can be wired later) --}}
-              <form action="/fountains/{{this.id}}/like" method="POST" style="display:inline;">
-                <button type="submit">Like</button>
-              </form>
-              <form action="/fountains/{{this.id}}/dislike" method="POST" style="display:inline;">
-                <button type="submit">Dislike</button>
-              </form>
+              <a href="/fountains/{{this._id}}">{{this.park}}, {{this.borough}}</a>
             </li>
           {{/each}}
         </ul>

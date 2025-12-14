@@ -88,7 +88,7 @@ export const addFavoriteFountain = async (fountainId, username) => {
   const fountainCollection = await fountains();
 
   //Make sure this fountain exists
-  const fountain = fountainCollection.findOne({ _id: fountainId });
+  const fountain = await fountainCollection.findOne({ "_id": fountainId });
   if (!fountain) throw "Fountain does not exist!";
 
   //Retrieve user
@@ -99,10 +99,54 @@ export const addFavoriteFountain = async (fountainId, username) => {
 
   //Add the fountain to the user profile
   let fountainList = user["favorites"];
-  fountainList.push(fountain["_id"]);
+  fountainList.push(fountainId.toString());
 
   //Increment the fountain's numFavorites counter
-  let numFavorites = fountain["numFavorites"]++;
+  let numFavorites = fountain["numFavorites"] + 1;
+
+  //Update user
+  await userCollection.updateOne(
+    {"username": username },
+    { $set: { favorites: fountainList } }
+  );
+
+  //Update fountain
+  await fountainCollection.updateOne(
+    { _id: fountainId },
+    { $set: { numFavorites: numFavorites } }
+  );
+};
+
+//Adds a fountain to a user's favorite list
+export const removeFavoriteFountain = async (fountainId, username) => {
+  //Validate fountainId
+  fountainId = h.checkValidID(fountainId, "Fountain id");
+
+  //Validate username
+  username = h.checkValidString(username, 2, 20, "Username");
+
+  //Get fountain collection
+  const fountainCollection = await fountains();
+
+  //Make sure this fountain exists
+  const fountain = await fountainCollection.findOne({ "_id": fountainId });
+  if (!fountain) throw "Fountain does not exist!";
+
+  //Retrieve user
+  const userCollection = await users();
+  const user = await userCollection.findOne({"username": username });
+
+  if (!user) throw "User could not be found!";
+
+  //Add the fountain to the user profile
+  let fountainList = user["favorites"];
+  fountainList = fountainList.filter(id => id !== fountainId.toString());
+
+  console.log(fountain);
+  console.log(fountain["numFavorites"]);
+
+  //Increment the fountain's numFavorites counter
+  let numFavorites = fountain["numFavorites"] - 1;
 
   //Update user
   await userCollection.updateOne(

@@ -188,15 +188,28 @@ router
   .route('/fountain/:id/like')
   .post(async (req, res) => {
     // code here for POST like fountain
-    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged into favorite!"});
+    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged in to favorite!"});
 
+    let user = req.session.user;
+    let fountainId = req.params.id;
 
+    await usersData.addFavoriteFountain(fountainId, user.username);
+
+    res.redirect(`/fountain/${fountainId}`);
   });
 
 router
   .route('/fountain/:id/dislike')
   .post(async (req, res) => {
     // code here for POST dislike fountain
+    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged in to unfavorite!"});
+
+    let user = req.session.user;
+    let fountainId = req.params.id;
+
+    await usersData.removeFavoriteFountain(fountainId, user.username);
+
+    res.redirect(`/fountain/${fountainId}`);
   });
 
 
