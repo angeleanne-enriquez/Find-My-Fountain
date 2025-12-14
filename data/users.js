@@ -29,7 +29,7 @@ export const registerUsers = async (
   password = h.checkValidPassword(password, 8, null, "Password");
 
   //Validate username
-  username = h.checkValidString(username, 2, 20, "Username");
+  username = h.checkValidString(username, 2, 20, "Username").toLowerCase();
 
   //Validate bio
   bio = h.checkValidString(bio, 20, 255, "Bio");
@@ -77,12 +77,12 @@ export const registerUsers = async (
 };
 
 //Adds a fountain to a user's favorite list
-export const addFavoriteFountain = async (fountainId, userId) => {
+export const addFavoriteFountain = async (fountainId, username) => {
   //Validate fountainId
   fountainId = h.checkValidID(fountainId, "Fountain id");
 
-  //Validate userId
-  userId = h.checkValidID(userId, "User id");
+  //Validate username
+  username = h.checkValidID(username, "Username");
 
   //Get fountain collection
   const fountainCollection = await fountains();
@@ -93,7 +93,7 @@ export const addFavoriteFountain = async (fountainId, userId) => {
 
   //Retrieve user
   const userCollection = await users();
-  const user = await userCollection.findOne({ _id: userId });
+  const user = await userCollection.findOne({"username": username });
 
   if (!user) throw "User could not be found!";
 
@@ -106,7 +106,7 @@ export const addFavoriteFountain = async (fountainId, userId) => {
 
   //Update user
   await userCollection.updateOne(
-    { _id: userId },
+    {"username": username },
     { $set: { favorites: fountainList } }
   );
 
@@ -118,12 +118,12 @@ export const addFavoriteFountain = async (fountainId, userId) => {
 };
 
 //Adds a review to the user's review list
-export const addReview = async (reviewId, userId) => {
+export const addReview = async (reviewId, username) => {
   //validate reviewId
   reviewId = h.checkValidID(reviewId, "Review id");
 
-  //Validate userId
-  userId = h.checkValidID(userId, "User id");
+  //Validate username
+  username = h.checkValidID(username, "Username");
 
   //Get the review collection
   const reviewCollection = await reviews();
@@ -134,7 +134,7 @@ export const addReview = async (reviewId, userId) => {
 
   //Retrieve user
   const userCollection = await users();
-  const user = await userCollection.findOne({ _id: userId });
+  const user = await userCollection.findOne({"username": username });
 
   if (!user) throw "User could not be found!";
 
@@ -143,31 +143,31 @@ export const addReview = async (reviewId, userId) => {
   reviewList.push(review["_id"]);
 
   await userCollection.updateOne(
-    { _id: userId },
+    { "username": username },
     { $set: { reviews: reviewList } }
   );
 };
 
 //Retrieves a given user's information
-export const getUserProfile = async (userId) => {
-  //Validate userId
-  userId = h.checkValidID(userId);
+export const getUserProfile = async (username) => {
+  //Validate username
+  username = h.checkValidString(username, 2, 20, "Username").toLowerCase();
 
   //Retrieve user
   const userCollection = await users();
-  const user = await userCollection.findOne({ _id: userId });
+  const user = await userCollection.findOne({"username": username });
 
   if (!user) throw "User could not be found!";
 
   const userProfile = {
     _id: user["_id"],
     firstName: user["firstName"],
-    lastName: user["lastname"],
+    lastName: user["lastName"],
     username: user["username"],
     bio: user["bio"],
     picture: user["picture"],
     privacy: user["privacy"],
-    fountains: user["fountains"],
+    favorites: user["favorites"],
     reviews: user["reviews"]
   };
 
@@ -186,13 +186,13 @@ export const login = async (username, password) => {
   const userCollection = await users();
   const existingUser = await userCollection.findOne({ username: username });
 
-  if (!existingUser) throw "Either the userId or password is invalid";
+  if (!existingUser) throw "Either the username or password is invalid";
 
   //Compare password to hashed password
   let passwordsMatch = await bcrypt.compare(password, existingUser["password"]);
   if (!passwordsMatch) throw "Either the username or password is invalid";
 
-  return await getUserProfile(existingUser["_id"]);
+  return await getUserProfile(existingUser["username"]);
 };
 
 //lets a user edit their settings
@@ -221,7 +221,7 @@ export const editSettings = async (
     typeof newBio !== "string" ||
     typeof newPrivacy !== "string"
   )
-    throw "Error: firstName, lastName, userId, password, username, bio, and privacy must be string type";
+    throw "Error: firstName, lastName, username, password, username, bio, and privacy must be string type";
 
     if((newFirst.trim() !== "" && !/^[A-Za-z]{2,20}$/.test(newFirst)) || (newLast.trim() !== "" || !/^[A-Za-z]{2,20}$/.test(newLast))) throw "Error: firstName and lastName must be between 2 to 20 characters inclusive."
 

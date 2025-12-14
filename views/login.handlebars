@@ -19,18 +19,18 @@
     action="/login"
     method="POST"
   >
-    {{!-- userId --}}
+    {{!-- username --}}
     <div class="form-group">
-      <label for="userId">User ID:</label>
+      <label for="username">User ID:</label>
       <input
         type="text"
-        name="userId"
-        id="userId"
+        name="username"
+        id="username"
         placeholder="Enter your user ID"
       />
       {{#if errors}}
-        {{#if errors.userId}}
-          <p class="error">{{errors.userId}}</p>
+        {{#if errors.username}}
+          <p class="error">{{errors.username}}</p>
         {{/if}}
       {{/if}}
     </div>

@@ -33,9 +33,9 @@ export const checkValidRatings = (ratings) => {
 };
 
 //Creates a new review
-export const createReview = async (posterId, fountainId, body, ratings) => {
-    //Validate posterId
-    posterId = h.checkValidID(posterId, "Poster id")
+export const createReview = async (username, fountainId, body, ratings) => {
+    //Validate posterName
+    posterId = h.checkValidString(username, 2, 20, "Username").toLowerCase();
     
     //Validate fountainId
     fountainId = h.checkValidID(fountainId, "Fountain id");
@@ -48,7 +48,7 @@ export const createReview = async (posterId, fountainId, body, ratings) => {
 
     //Validate that user exists
     const userCollection = await users();
-    const existingUser = await userCollection.findOne({"_id": posterId});
+    const existingUser = await userCollection.findOne({"username": username});
     if (!existingUser) throw "Poster does not exist!";
 
     //Validate that fountain exists
@@ -60,7 +60,7 @@ export const createReview = async (posterId, fountainId, body, ratings) => {
     const reviewCollection = await reviews();
 
     const newReview = {
-        poster: posterId,
+        username: username,
         fountain: fountainId,
         body: body,
         ratings: ratings,
@@ -78,19 +78,19 @@ export const createReview = async (posterId, fountainId, body, ratings) => {
 };
 
 //Adds a user comment to a review
-export const addComment = async (reviewId, userId, body) => {
+export const addComment = async (reviewId, username, body) => {
     //Validate reviewId
     reviewId = h.checkValidID(reviewId, "Review id");
     
     //Validate userId
-    userId = h.checkValidID(userId, "User id");
+    username = h.checkValidString(username, 2, 20, "Username");
 
     //Validate body
     body = h.checkValidString(body, 20, 255, "Comment body");
 
     //Make sure the user exists
     const userCollection = await users();
-    const existingUser = await userCollection.findOne({"_id": userId});
+    const existingUser = await userCollection.findOne({"username": username});
     if (!existingUser) throw "User not found!";
 
     //Get review
@@ -101,7 +101,7 @@ export const addComment = async (reviewId, userId, body) => {
     let reviewComments = existingReview["comments"];
 
     const newComment = {
-        user: userId,
+        username: username,
         body: body
     };
 
