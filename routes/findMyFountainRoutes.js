@@ -101,6 +101,10 @@ router
             let bio = req.body.bio
             let picture = req.body.picture
             let privacy = req.body.privacy
+
+            let confirmPassword = req.body.confirmPassword;
+            if (password !== confirmPassword) throw "Error: password and confirmPassword must match";
+            
             //registering 
             let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture,privacy)
             //take back to home but now logged in 

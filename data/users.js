@@ -16,11 +16,11 @@ export const registerUsers = async (
 ) => {
   //Validate firstName
   firstName = h.checkValidString(firstName, 2, 20, "First name");
-  if(!/^[A-Za-z]/.test(firstName)) throw "Error: First name can only have letters."
+  if(!/^[A-Za-z]+$/.test(firstName)) throw "Error: First name can only have letters."
 
   //Validate lastName
   lastName = h.checkValidString(lastName, 2, 20, "Last name");
-  if(!/^[A-Za-z]/.test(lastName)) throw "Error: First name can only have letters."
+  if(!/^[A-Za-z]+$/.test(lastName)) throw "Error: First name can only have letters."
 
   //Validate email
   email = h.checkValidEmail(email, "Email address");
@@ -32,7 +32,7 @@ export const registerUsers = async (
   username = h.checkValidString(username, 2, 20, "Username");
 
   //Validate bio
-  bio = h.checkValidString(bio, 20, 255, "Bio");
+  if(bio.trim() !== "") bio = h.checkValidString(bio, 20, 255, "Bio");
 
   //Validate picture
 

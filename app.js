@@ -47,6 +47,16 @@ app.use("/user/:id", async (req, res, next) => {
         errorClass: "error",
         link: "/user",
       });
+
+    if(req.session.user._id !== req.params.id && req.session.user.privacy === "private") return res
+        .status(403)
+        .render("error", {
+        title: "Error",
+        errorMessages: "Error: user is private.",
+        errorClass: "error",
+        link: "/user",
+        });
+
   else next();
 });
 
@@ -60,7 +70,6 @@ app.use("/login", async (req, res, next) => {
 //for register page 
 app.use("/register", async (req, res, next) => {
   if (req.session.user) return res.redirect(`/user/${req.session.user["_id"]}`);
-  
   next();
 });
 

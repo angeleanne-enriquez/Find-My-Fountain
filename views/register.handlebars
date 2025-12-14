@@ -15,6 +15,8 @@
     <a href="/">Back to Home</a>
   </div>
 
+  <div class="error" hidden></div>
+
   <form name="signup-form" id="signup-form" action="/register" method="POST">
     {{!-- First Name --}}
     <div class="form-group">
@@ -25,11 +27,11 @@
         id="firstName"
         placeholder="First Name"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.firstName}}
           <p class="error">{{errors.firstName}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     {{!-- Last Name --}}
@@ -41,27 +43,27 @@
         id="lastName"
         placeholder="Last Name"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.lastName}}
           <p class="error">{{errors.lastName}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     {{!-- Email --}}
     <div class="form-group">
       <label for="email">Email:</label>
       <input
-        type="email"
+        type="text"
         name="email"
         id="email"
         placeholder="Email address"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.email}}
           <p class="error">{{errors.email}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     {{!-- Username --}}
@@ -73,11 +75,11 @@
         id="username"
         placeholder="Choose a username"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.username}}
           <p class="error">{{errors.username}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     {{!-- Password --}}
@@ -89,11 +91,11 @@
         id="password"
         placeholder="Password"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.password}}
           <p class="error">{{errors.password}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     {{!-- Confirm Password --}}
@@ -105,14 +107,14 @@
         id="confirmPassword"
         placeholder="Confirm Password"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.confirmPassword}}
           <p class="error">{{errors.confirmPassword}}</p>
         {{/if}}
         {{#if errors.match}}
           <p class="error">{{errors.match}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     {{!-- Bio (optional) --}}
@@ -124,11 +126,11 @@
         id="bio"
         placeholder="Tell us a bit about yourself (e.g., I love drinking water!)"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.bio}}
           <p class="error">{{errors.bio}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     {{!-- Picture path / URL (optional) --}}
@@ -140,11 +142,11 @@
         id="picture"
         placeholder="Path or URL to your profile picture"
       />
-      {{#if errors}}
+      {{!-- {{#if errors}}
         {{#if errors.picture}}
           <p class="error">{{errors.picture}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     <div class="form-group"></div>
@@ -153,18 +155,18 @@
                 <option value="public">Public</option>
                 <option value="private">Private</option>
                 </select>
-        {{#if errors}}
-        {{#if errors.picture}}
-          <p class="error">{{errors.picture}}</p>
+        {{!-- {{#if errors}}
+        {{#if errors.privacy}}
+          <p class="error">{{errors.privacy}}</p>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
     </div>
 
     <button type="submit" name="submitButton" id="submitButton">Create Account</button>
     <button type="reset">Clear Form</button>
   </form>
 
-  {{#if error}}
+  {{!-- {{#if error}}
     <p class="error">{{error}}</p>
-  {{/if}}
+  {{/if}} --}}
 </section>
