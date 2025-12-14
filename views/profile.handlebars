@@ -9,20 +9,20 @@
 <section class="page-container card">
   {{!-- Basic profile info --}}
   <header>
-    <h1>{{username}}'s Profile</h1>
+    <h1>{{user.username}}'s Profile</h1>
 
     {{#if picture}}
       <img
-        src="{{picture}}"
-        alt="{{username}}'s profile picture"
+        src="{{user.picture}}"
+        alt="{{user.username}}'s profile picture"
         class="profile-picture"
       />
     {{/if}}
 
-    <p><strong>Name:</strong> {{firstName}} {{lastName}}</p>
+    <p><strong>Name:</strong> {{user.firstName}} {{user.lastName}}</p>
 
-    {{#if bio}}
-      <p><strong>Bio:</strong> {{bio}}</p>
+    {{#if user.bio}}
+      <p><strong>Bio:</strong> {{user.bio}}</p>
     {{else}}
       <p><strong>Bio:</strong> This user has not added a bio yet.</p>
     {{/if}}
@@ -34,10 +34,10 @@
   <section>
     <h2>Favorite Fountains</h2>
 
-    {{#if favorites}}
-      {{#if favorites.length}}
+    {{#if user.favorites}}
+      {{#if user.favorites.length}}
         <ul>
-          {{#each favorites}}
+          {{#each user.favorites}}
             <li>
               <a href="/fountains/{{this.id}}">{{this.name}}</a>
               {{!-- Like/dislike buttons (can be wired later) --}}
@@ -64,10 +64,10 @@
   <section>
     <h2>Reviews</h2>
 
-    {{#if reviews}}
-      {{#if reviews.length}}
+    {{#if user.reviews}}
+      {{#if user.reviews.length}}
         <ul>
-          {{#each reviews}}
+          {{#each user.reviews}}
             <li>
               <p>
                 <strong>Fountain:</strong>
@@ -100,36 +100,7 @@
 
   {{!-- Settings for your own profile --}}
   {{#if isOwnProfile}}
-    <section>
-      <h2>Profile Settings</h2>
-      <p>You can update your bio and profile picture here.</p>
-
-      <form action="/user/{{profileUser.id}}" method="POST">
-        <div class="form-group">
-          <label for="bio">Bio:</label>
-          <input
-            type="text"
-            id="bio"
-            name="bio"
-            value="{{profileUser.bio}}"
-            placeholder="Update your bio"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="picture">Profile Picture (path or URL):</label>
-          <input
-            type="text"
-            id="picture"
-            name="picture"
-            value="{{profileUser.picture}}"
-            placeholder="Update your picture path or URL"
-          />
-        </div>
-
-        <button type="submit">Save Changes</button>
-      </form>
-    </section>
+    <a href="/user/{{username}}/settings">Update your profile</a>
   {{/if}}
 
   <hr />

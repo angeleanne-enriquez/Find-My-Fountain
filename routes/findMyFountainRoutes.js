@@ -158,7 +158,12 @@ router
         //checking if fountain exists
         let fountainId = req.params.id;
         let fountain = await getFountain(fountainId);
-        res.render('fountainDetails',fountain)
+
+        let user = null;
+        if (req.session.user) user = req.session.user;
+
+
+        res.render('fountainDetails',fountain, user)
     } catch(e) {
         return res.status(403).render("error", {error:e})
     }
@@ -215,13 +220,13 @@ router
           return res.status(200).render("profile", {
             //returns page with that info
             title: `User: ${username}`,
-            firstName: firstName,
+            user: {firstName: firstName,
             lastName: lastName,
             bio: bio,
             picture: picture,
             favorites: favorites,
             reviews: reviews,
-            username: username,
+            username: username},
             isOwnProfile: isOwnProfile
             //   likedFountains,
             //   dislikedFountains,
@@ -256,7 +261,7 @@ router
       let username = req.params.username; //checks if user exists
       await usersData.getUserProfile(username);
 
-      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings", user: {username: username }}); //renders status page
       else throw "Error: cannot look at user's settings that are not your own."
 
     } catch (e) {
