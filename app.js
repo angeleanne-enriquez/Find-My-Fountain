@@ -66,14 +66,14 @@ app.use("/user/:username", async (req, res, next) => {
 
 //for login page 
 app.use("/login", async (req, res, next) => {
-  if (req.session.user) return res.redirect(`/user/${req.session.user["_id"]}`);
+  if (req.session.user) return res.redirect(`/user/${req.session.user["username"]}`);
   next();
 });
 
 
 //for register page 
 app.use("/register", async (req, res, next) => {
-  if (req.session.user) return res.redirect(`/user/${req.session.user["_id"]}`);
+  if (req.session.user) return res.redirect(`/user/${req.session.user["username"]}`);
   next();
 });
 

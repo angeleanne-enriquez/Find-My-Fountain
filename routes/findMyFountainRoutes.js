@@ -158,7 +158,12 @@ router
         //checking if fountain exists
         let fountainId = req.params.id;
         let fountain = await getFountain(fountainId);
-        res.render('fountainDetails',fountain)
+
+        let user = null;
+        if (req.session.user) user = req.session.user;
+
+
+        res.render('fountainDetails',fountain, user)
     } catch(e) {
         return res.status(403).render("error", {error:e})
     }
@@ -194,32 +199,41 @@ router
           throw "Error: no username provided";
         }
 
-        let username = req.params.username; //check if user exists; throws otherwise
-        let user = await usersData.getUserProfile(username);
+        let viewUsername = req.params.username; //check if user exists; throws otherwise
+        let viewUser = await usersData.getUserProfile(viewUsername);
 
-        if(((req.session.user) && (req.session.user.username === user.username)) || user.privacy === "public") {
+        if(((req.session.user) && (req.session.user.username === viewUser.username)) || viewUser.privacy === "public") {
           
-          let firstName = user.firstName; //get all the info abt the user to display on the page
-          let lastName = user.lastName;
-          let bio = user.bio;
-          let picture = user.picture;
-          let favorites = user.favorites;
-          let reviews = user.reviews;
+          let firstName = viewUser.firstName; //get all the info abt the user to display on the page
+          let lastName = viewUser.lastName;
+          let bio = viewUser.bio;
+          let picture = viewUser.picture;
+          let favorites = viewUser.favorites;
+          let reviews = viewUser.reviews;
           //   let likedFountains = userName.likedFountains;,
           //   dislikedFountains = userName.dislikedFountains;,
           //   privacy = userName.privacy;,
           //   role = userName.role;
-      
+
+          let isOwnProfile = ((req.session.user) && (req.session.user.username === viewUser.username));
+          
+          let loginUser = null;
+          if (req.session.user) loginUser = req.session.user;
+
           return res.status(200).render("profile", {
             //returns page with that info
-            title: `User: ${username}`,
-            firstName: firstName,
-            lastName: lastName,
-            bio: bio,
-            picture: picture,
-            favorites: favorites,
-            reviews: reviews,
-            username: username
+            title: `User: ${viewUsername}`,
+            viewUser: {
+              firstName: firstName,
+              lastName: lastName,
+              bio: bio,
+              picture: picture,
+              favorites: favorites,
+              reviews: reviews,
+              username: viewUsername
+            },
+            user: loginUser,
+            isOwnProfile: isOwnProfile
             //   likedFountains,
             //   dislikedFountains,
             //   privacy,
@@ -253,7 +267,7 @@ router
       let username = req.params.username; //checks if user exists
       await usersData.getUserProfile(username);
 
-      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings", user: {username: username }}); //renders status page
       else throw "Error: cannot look at user's settings that are not your own."
 
     } catch (e) {
