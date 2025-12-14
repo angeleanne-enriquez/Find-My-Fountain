@@ -209,6 +209,8 @@ router
           //   dislikedFountains = userName.dislikedFountains;,
           //   privacy = userName.privacy;,
           //   role = userName.role;
+
+          let isOwnProfile = ((req.session.user) && (req.session.user.username === user.username));
       
           return res.status(200).render("profile", {
             //returns page with that info
@@ -219,7 +221,8 @@ router
             picture: picture,
             favorites: favorites,
             reviews: reviews,
-            username: username
+            username: username,
+            isOwnProfile: isOwnProfile
             //   likedFountains,
             //   dislikedFountains,
             //   privacy,

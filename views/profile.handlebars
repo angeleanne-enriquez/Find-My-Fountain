@@ -9,20 +9,20 @@
 <section class="page-container card">
   {{!-- Basic profile info --}}
   <header>
-    <h1>{{profileUser.username}}'s Profile</h1>
+    <h1>{{username}}'s Profile</h1>
 
-    {{#if profileUser.picture}}
+    {{#if picture}}
       <img
-        src="{{profileUser.picture}}"
-        alt="{{profileUser.username}}'s profile picture"
+        src="{{picture}}"
+        alt="{{username}}'s profile picture"
         class="profile-picture"
       />
     {{/if}}
 
-    <p><strong>Name:</strong> {{profileUser.firstName}} {{profileUser.lastName}}</p>
+    <p><strong>Name:</strong> {{firstName}} {{lastName}}</p>
 
-    {{#if profileUser.bio}}
-      <p><strong>Bio:</strong> {{profileUser.bio}}</p>
+    {{#if bio}}
+      <p><strong>Bio:</strong> {{bio}}</p>
     {{else}}
       <p><strong>Bio:</strong> This user has not added a bio yet.</p>
     {{/if}}
