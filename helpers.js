@@ -33,7 +33,7 @@ export const checkValidID = (id) => {
     //Validates the id string
     if (!ObjectId.isValid(id)) throw 'Invalid object ID!';
 
-    return id;
+    return new ObjectId(id);
 };
 
 //Validates a given boolean
