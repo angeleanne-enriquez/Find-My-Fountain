@@ -9,20 +9,20 @@
 <section class="page-container card">
   {{!-- Basic profile info --}}
   <header>
-    <h1>{{user.username}}'s Profile</h1>
+    <h1>{{viewUser.username}}'s Profile</h1>
 
     {{#if picture}}
       <img
-        src="{{user.picture}}"
-        alt="{{user.username}}'s profile picture"
+        src="{{viewUser.picture}}"
+        alt="{{viewUser.username}}'s profile picture"
         class="profile-picture"
       />
     {{/if}}
 
-    <p><strong>Name:</strong> {{user.firstName}} {{user.lastName}}</p>
+    <p><strong>Name:</strong> {{viewUser.firstName}} {{viewUser.lastName}}</p>
 
-    {{#if user.bio}}
-      <p><strong>Bio:</strong> {{user.bio}}</p>
+    {{#if viewUser.bio}}
+      <p><strong>Bio:</strong> {{viewUser.bio}}</p>
     {{else}}
       <p><strong>Bio:</strong> This user has not added a bio yet.</p>
     {{/if}}
@@ -34,10 +34,10 @@
   <section>
     <h2>Favorite Fountains</h2>
 
-    {{#if user.favorites}}
-      {{#if user.favorites.length}}
+    {{#if viewUser.favorites}}
+      {{#if viewUser.favorites.length}}
         <ul>
-          {{#each user.favorites}}
+          {{#each viewUser.favorites}}
             <li>
               <a href="/fountains/{{this.id}}">{{this.name}}</a>
               {{!-- Like/dislike buttons (can be wired later) --}}
@@ -64,10 +64,10 @@
   <section>
     <h2>Reviews</h2>
 
-    {{#if user.reviews}}
-      {{#if user.reviews.length}}
+    {{#if viewUser.reviews}}
+      {{#if viewUser.reviews.length}}
         <ul>
-          {{#each user.reviews}}
+          {{#each viewUser.reviews}}
             <li>
               <p>
                 <strong>Fountain:</strong>
@@ -100,10 +100,10 @@
 
   {{!-- Settings for your own profile --}}
   {{#if isOwnProfile}}
-    <a href="/user/{{username}}/settings">Update your profile</a>
-  {{/if}}
+    <a href="/user/{{user.username}}/settings">Update your profile</a>
 
-  <hr />
+    <hr />
+  {{/if}}
 
   <p>
     <a href="/">Back to Landing Page</a>
