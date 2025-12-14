@@ -80,8 +80,8 @@ export const calculateAverages = async (reviews) => {
 };
 
 //getting fountain
-export const getFountain = async(id) => {
-    h.checkValidID(id)
+export const getFountain = async(fountainId) => {
+    fountainId = h.checkValidID(fountainId)
     const fountainCollection = await fountains();
     const fountain = await fountainCollection.findOne({"_id": fountainId});
     if (!fountain){

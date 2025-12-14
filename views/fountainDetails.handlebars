@@ -43,13 +43,15 @@
     <section>
       <h2>Do you like this fountain?</h2>
 
-      <form action="/fountain/{{fountain._id}}/like" method="POST">
-        <button type="submit">Like</button>
-      </form>
-
-      <form action="/fountain/{{fountain._id}}/dislike" method="POST">
-        <button type="submit">Dislike</button>
-      </form>
+      {{#if favorited}}
+        <form action="/fountain/{{fountain._id}}/dislike" method="POST">
+          <button type="submit">Unfavorite</button>
+        </form>
+      {{else}}
+        <form action="/fountain/{{fountain._id}}/like" method="POST">
+          <button type="submit">Favorite</button>
+        </form>
+      {{/if}}
 
       {{#if likeError}}
         <p class="error">{{likeError}}</p>

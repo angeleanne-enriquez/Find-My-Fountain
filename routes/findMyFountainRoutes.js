@@ -157,13 +157,25 @@ router
     try {
         //checking if fountain exists
         let fountainId = req.params.id;
-        let fountain = await getFountain(fountainId);
+        let fountain = await fountainsData.getFountain(fountainId);
 
         let user = null;
-        if (req.session.user) user = req.session.user;
+        let favorited = false;
+        if (req.session.user) {
+          user = req.session.user;
 
+          //Check it has already been favorited
+          let userData = await usersData.getUserProfile(user.username);
+          let favorites = await userData["favorites"];
 
-        res.render('fountainDetails',fountain, user)
+          favorited = (favorites.includes(req.params.id));
+        }
+
+        res.render('fountainDetails', {
+          fountain: fountain,
+          user: user,
+          favorited: favorited
+        });
     } catch(e) {
         return res.status(403).render("error", {error:e})
     }
@@ -176,6 +188,9 @@ router
   .route('/fountain/:id/like')
   .post(async (req, res) => {
     // code here for POST like fountain
+    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged into favorite!"});
+
+
   });
 
 router
