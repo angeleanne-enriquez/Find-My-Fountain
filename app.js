@@ -14,6 +14,8 @@ import configRoutes from "./routes/index.js";
 import exphbs from "express-handlebars";
 import fileUpload from "express-fileupload";
 import { seedFunc } from "./tasks/seed.js";
+import { getUserProfile } from "./data/users.js";
+import { getFountain } from "./data/fountains.js";
 
 
 const app = express();
@@ -37,57 +39,104 @@ app.use(
 //Seed database
 await seedFunc()
 
-/*1. for get /user/:id
-    a. redirect viewer to the user page with that id 
-    b. EXTRA FEATURE: if private, throw error 
-    c. if no id was provided, throw error 
+/*1. for get /user/:username
+    a. if user does not exist, render an error page
+    b. if user is private and the viewer is not the user, render an error page
+    c. if there are any other errors, render an error page 
+    d. else redirect viewer to the user page with that username
 */
 app.use("/user/:username", async (req, res, next) => {
-  if (!req.params.username) return res
-      .status(403)
-      .render("error", {
-        title: "Error",
-        errorMessages: "Error: no id was given.",
-        errorClass: "error",
-        link: "/user",
-      });
+    try {
+        let viewUsername = req.params.username; //check if user exists; throws otherwise
+        let viewUser = await getUserProfile(viewUsername);
+        
+        if(!viewUser) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: user cannot be found",
+            errorClass: "error",
+            link: "/user",
+            });
 
-    /*if(((!req.session.user) || (req.session.user.username !== req.params.username)) && (req.session.user.privacy === "private")) return res
-        .status(403)
-        .render("error", {
-        title: "Error",
-        errorMessages: "Error: user is private.",
-        errorClass: "error",
-        link: "/user",
-        });*/
+        if((req.session.user.username !== req.params.username) && (viewUser.privacy === "private")) return res
+            .status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: user is private.",
+            errorClass: "error",
+            link: "/user",
+            });
 
-  else next();
+        else next();
+    } catch(e) {
+        return res
+            .status(403)
+            .render("error", {
+            title: "Error",
+            error: e,
+            errorClass: "error",
+            link: "/user",
+            });
+    }
 });
 
-//for login page 
+//2. for login page - if the user is already logged in, redirect them to their own page; else go to the login page 
 app.use("/login", async (req, res, next) => {
   if (req.session.user) return res.redirect(`/user/${req.session.user["username"]}`);
   next();
 });
 
-
-//for register page 
+//3. for register page - if the user is already logged in, redirect them to their own page; else go to the login page 
 app.use("/register", async (req, res, next) => {
   if (req.session.user) return res.redirect(`/user/${req.session.user["username"]}`);
   next();
 });
 
-
-//for fountain page
+/*4. for get /fountain/:id
+    a. if fountain does not exist, render an error page
+    b. if there are any other errors, render an error page 
+    c. else redirect viewer to the fountain page with that id
+*/
 app.use("/fountain/:id", async (req, res, next) => {
-  next();
+    try {
+        let viewFountainId = req.params.id; //check if fountain exists; throws otherwise
+        let viewFountain = await getFountain(viewFountainId);
+        
+        if(!viewFountain) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: fountain cannot be found",
+            errorClass: "error",
+            link: "/fountain",
+            });
+
+        if(viewFountain.operational === false) return res
+            .status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: fountain is not operational.",
+            errorClass: "error",
+            link: "/fountain",
+            });
+
+        else next();
+    } catch(e) {
+        return res
+            .status(403)
+            .render("error", {
+            title: "Error",
+            error: e,
+            errorClass: "error",
+            link: "/fountain",
+            });
+    }
 });
 
-//for search page
-app.use("/search", async (req, res, next) => {
-  next();
+//5. for logout page
+app.use("/logout", async (req, res, next) => {
+  if (!req.session.user) return res.redirect("/login");
+  else next();
 });
-
 
 //setting up the handlebars
 app.engine("handlebars", exphbs.engine());
