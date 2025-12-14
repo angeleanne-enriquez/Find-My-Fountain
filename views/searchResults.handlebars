@@ -1,0 +1,38 @@
+{{!
+Page for listing fountains 
+}}
+  <section>
+    <p>
+    <a href="/search">Search Again?</a>
+    </p>
+    <form method = "POST" action = '/searchResults'>
+        {{!Filter form}}
+        <p>Filters:</p>
+        {{!Park}}
+        <div class = "filter-form">
+            <label for = "park"> Park name:</label>
+                <input
+                    type="text"
+                    name="park"
+                    id="park"
+                    placeholder="park name"
+                />
+        </div>
+        {{!Rating}}
+        <div class = "filter-form">
+            <label for = "rating">Rating</label>
+            <select>
+                <option value = "Select">Select Rating</option>
+                <option value = "1">>1</option>
+                <option value = "2">>2</option>
+                <option value = "3">>3</option>
+                <option value = "4">>4</option>
+                <option value = "5">5</option>
+            </select>
+        </div>
+    </form>
+    <h2>Results for {{Borough}}:</h2>
+      <div class="Results">
+      </div>
+      
+  </section>
