@@ -197,7 +197,7 @@ router
         let username = req.params.username; //check if user exists; throws otherwise
         let user = await usersData.getUserProfile(username);
 
-        if(((req.session.user) && (req.session.user.username === user.username)) || user.privacy === "public"){
+        if(((req.session.user) && (req.session.user.username === user.username)) || user.privacy === "public") {
           
           let firstName = user.firstName; //get all the info abt the user to display on the page
           let lastName = user.lastName;

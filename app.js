@@ -38,8 +38,8 @@ app.use(
     b. EXTRA FEATURE: if private, throw error 
     c. if no id was provided, throw error 
 */
-app.use("/user/:id", async (req, res, next) => {
-  if (!req.params.id) return res
+app.use("/user/:username", async (req, res, next) => {
+  if (!req.params.username) return res
       .status(403)
       .render("error", {
         title: "Error",
@@ -48,14 +48,14 @@ app.use("/user/:id", async (req, res, next) => {
         link: "/user",
       });
 
-    if(req.session.user._id !== req.params.id && req.session.user.privacy === "private") return res
+    /*if(((!req.session.user) || (req.session.user.username !== req.params.username)) && (req.session.user.privacy === "private")) return res
         .status(403)
         .render("error", {
         title: "Error",
         errorMessages: "Error: user is private.",
         errorClass: "error",
         link: "/user",
-        });
+        });*/
 
   else next();
 });

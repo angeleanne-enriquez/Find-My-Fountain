@@ -177,7 +177,7 @@ export const getUserProfile = async (username) => {
 //Let's a user log in to their account
 export const login = async (username, password) => {
   //Validate username
-  username = h.checkValidString(username, 2, 20, "Username");
+  username = h.checkValidString(username, 2, 20, "Username").toLowerCase();
 
   //Validate password
   password = h.checkValidPassword(password, 8, null, "Password");
