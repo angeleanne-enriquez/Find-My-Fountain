@@ -142,4 +142,138 @@ if(settingsForm.length){
     })
 }
 
+// Login form validation
+const loginForm = $('#login-form');
+
+if (loginForm.length) {
+  loginForm.on('submit', function (event) {
+    event.preventDefault();
+
+    // remove any old error messages
+    $('.error').remove();
+
+    let errors = {};
+
+    let username = $('#username').val().trim();
+    let password = $('#password').val();
+
+    // validate username
+    try {
+      username = h.checkValidString(username, 2, 20, 'Username');
+    } catch (e) {
+      errors.username = e;
+    }
+
+    // validate password
+    try {
+      password = h.checkValidPassword(password, 8, null, 'Password');
+    } catch (e) {
+      errors.password = e;
+    }
+
+    // show any errors right under the corresponding inputs
+    if (errors.username) {
+      $('<p>')
+        .addClass('error')
+        .text(errors.username)
+        .insertAfter('#username');
+    }
+
+    if (errors.password) {
+      $('<p>')
+        .addClass('error')
+        .text(errors.password)
+        .insertAfter('#password');
+    }
+
+    // if no errors, allow the normal POST /login to go through
+    if (Object.keys(errors).length === 0) {
+      event.target.submit();
+    }
+  });
+}
+
+// Form validation for review form (fountainDetails page)
+const reviewForm = $("#review-form");
+  const reviewError = $("#review-error");
+
+  if (reviewForm.length) {
+    reviewForm.on("submit", function (event) {
+      event.preventDefault();
+
+      // clear previous error
+      reviewError.text("").prop("hidden", true);
+
+      try {
+        // pull values
+        let taste = $("#taste").val();
+        let location = $("#location").val();
+        let pressure = $("#pressure").val();
+        let cleanliness = $("#cleanliness").val();
+        let accessibility = $("#accessibility").val();
+        let reviewText = $("#reviewText").val();
+        let operationalChecked = $("#operational").is(":checked");
+
+        // convert to numbers
+        taste = Number(taste);
+        location = Number(location);
+        pressure = Number(pressure);
+        cleanliness = Number(cleanliness);
+        accessibility = Number(accessibility);
+
+        // basic checks before calling helpers
+        if (Number.isNaN(taste)) throw "Taste rating must be a number.";
+        if (Number.isNaN(location)) throw "Location rating must be a number.";
+        if (Number.isNaN(pressure)) throw "Pressure rating must be a number.";
+        if (Number.isNaN(cleanliness)) throw "Cleanliness rating must be a number.";
+        if (Number.isNaN(accessibility)) throw "Accessibility rating must be a number.";
+
+        // range checks using your helper
+        h.checkValidNumber(taste, 1, 5, "Taste");
+        h.checkValidNumber(location, 1, 5, "Location");
+        h.checkValidNumber(pressure, 1, 5, "Pressure");
+        h.checkValidNumber(cleanliness, 1, 5, "Cleanliness");
+        h.checkValidNumber(accessibility, 1, 5, "Accessibility");
+
+        // review text: 20–255 chars
+        reviewText = h.checkValidString(reviewText, 20, 255, "Review content");
+
+        // operational: require that the user checks the box
+        if (!operationalChecked) {
+          throw "Please mark this fountain as working by checking the box.";
+        }
+
+        // build payload for the POST /fountain/:id route
+        const payload = {
+          taste: taste,
+          location: location,
+          pressure: pressure,
+          cleanliness: cleanliness,
+          accessibility: accessibility,
+          operational: true, // because box is checked
+          reviewText: reviewText,
+        };
+
+        const actionUrl = reviewForm.attr("action");
+
+        $.ajax({
+          method: "POST",
+          url: actionUrl,
+          contentType: "application/json",
+          data: JSON.stringify(payload),
+        })
+          .then(function () {
+            // on success, just reload the page so new review shows up
+            window.location.reload();
+          })
+          .fail(function () {
+            // simple error message on failure
+            reviewError.text("Failed to submit review. Please try again.").prop("hidden", false);
+          });
+      } catch (e) {
+        reviewError.text(e).prop("hidden", false);
+      }
+    });
+  }
+
 })(window.jQuery);

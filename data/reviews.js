@@ -34,8 +34,8 @@ export const checkValidRatings = (ratings) => {
 
 //Creates a new review
 export const createReview = async (username, fountainId, body, ratings) => {
-    //Validate posterName
-    posterId = h.checkValidString(username, 2, 20, "Username").toLowerCase();
+    //Validate username
+    username = h.checkValidString(username, 2, 20, "Username").toLowerCase();
     
     //Validate fountainId
     fountainId = h.checkValidID(fountainId, "Fountain id");
@@ -131,3 +131,17 @@ export const getReviewContent = async (reviewId) => {
 
     return reviewContent;
 }
+
+export const getReviewsByFountainId = async (fountainId) => {
+    // validate the id
+    fountainId = h.checkValidID(fountainId, "Fountain id");
+  
+    const reviewCollection = await reviews();
+  
+    // get all reviews whose fountain field matches this fountainId
+    const reviewList = await reviewCollection
+      .find({ fountain: fountainId })
+      .toArray();
+  
+    return reviewList;
+  };
