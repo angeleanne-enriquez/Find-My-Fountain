@@ -82,7 +82,7 @@ export const addFavoriteFountain = async (fountainId, username) => {
   fountainId = h.checkValidID(fountainId, "Fountain id");
 
   //Validate username
-  username = h.checkValidID(username, "Username");
+  username = h.checkValidString(username, 2, 20, "Username");
 
   //Get fountain collection
   const fountainCollection = await fountains();
@@ -123,7 +123,7 @@ export const addReview = async (reviewId, username) => {
   reviewId = h.checkValidID(reviewId, "Review id");
 
   //Validate username
-  username = h.checkValidID(username, "Username");
+  username = h.checkValidString(username, 2, 20, "Username");
 
   //Get the review collection
   const reviewCollection = await reviews();

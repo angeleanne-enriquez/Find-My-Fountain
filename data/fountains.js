@@ -49,6 +49,9 @@ export const calculateAverages = async (reviews) => {
     //Go through each review and add its ratings
     for (let reviewId of reviews) {
         const review = await reviewCollection.findOne({"_id": reviewId});
+        //If the review was deleted, do not use it in the calculations
+        if (!review) continue;
+
         const reviewRatings = review["ratings"];
 
         tasteSum += reviewRatings["taste"]
