@@ -97,9 +97,13 @@
     <section>
       <h2>Write a Review</h2>
 
-      {{#if reviewError}}
-        <p class="error">{{reviewError}}</p>
-      {{/if}}
+    {{!-- server-side error (from route) --}}
+    {{#if reviewError}}
+      <p class="error">{{reviewError}}</p>
+    {{/if}}
+
+    {{!-- client-side/Ajax error --}}
+    <p id="review-error" class="error" hidden></p>
 
       <form action="/fountain/{{fountain._id}}" method="POST" id="review-form" name="review-form">
       {{!-- Taste rating --}}

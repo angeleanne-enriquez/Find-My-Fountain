@@ -58,7 +58,7 @@ app.use("/user/:username", async (req, res, next) => {
             link: "/user",
             });
 
-        if((req.session.user.username !== req.params.username) && (viewUser.privacy === "private")) return res
+        if(((!req.session.user) || (req.session.user.username !== req.params.username)) && (viewUser.privacy === "private")) return res
             .status(403)
             .render("error", {
             title: "Error",

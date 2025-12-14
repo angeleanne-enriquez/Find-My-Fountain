@@ -159,7 +159,7 @@ export const getFavoriteFountains = async(favoriteIds) => {
 
         let fountainInfo = {};
         
-        fountainInfo["_id"] = fountain["_id"];
+        fountainInfo["_id"] = fountain["_id"].toString();
         fountainInfo["park"] = fountain["park"];
         fountainInfo["borough"] = fountain["borough"];
 

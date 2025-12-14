@@ -142,9 +142,6 @@ export const removeFavoriteFountain = async (fountainId, username) => {
   let fountainList = user["favorites"];
   fountainList = fountainList.filter(id => id !== fountainId.toString());
 
-  console.log(fountain);
-  console.log(fountain["numFavorites"]);
-
   //Increment the fountain's numFavorites counter
   let numFavorites = fountain["numFavorites"] - 1;
 
