@@ -92,7 +92,7 @@ export const getFountain = async(fountainId) => {
 }
 
 //get fountain by borough
-export const fountainByBorough = async(borough) => {
+export const fountainByBorough = async(borough,parkFilter,ratingFilter) => {
     if (!borough){
         throw "Must input borough!"
     }
@@ -117,11 +117,39 @@ export const fountainByBorough = async(borough) => {
     if (borough == "bronx"){
         borough = "Bronx"
     }
-    let boroughFiltered = fountainCollection.find({borough:borough}).toArray()
-    return boroughFiltered
+    //filtering
+    let boroughFiltered = await fountainCollection.find({borough:borough}).toArray()
+    let curFilter = boroughFiltered
+    let finalFilter = []
+    //START FILTERING
+    //park filter
+    if (parkFilter){
+        let filteredParkFountains = []
+        for (let x of curFilter){
+            if (x.park == parkFilter){
+                filteredParkFountains.push(x)
+          }
+        }
+        if (filteredParkFountains.length === 0){
+            throw "No fountains in this borough with that park name!"
+        }
+        curFilter = filteredParkFountains
+    }
+    //rating filter
+    if (ratingFilter && ratingFilter != 'Select Rating'){
+        for (let x of curFilter){
+            if (x.averageRatings > Number(ratingFilter)){
+                finalFilter.push(x)
+            }
+        }
+        if (finalFilter.length === 0){
+            throw "No fountains with that rating"
+        }
+        return finalFilter
+    }
+    
+    return curFilter
 }
-
-export default getFountain
 
 //Takes a list of ids and returns a list of fountain info (id, park, borough)
 export const getFavoriteFountains = async(favoriteIds) => {
@@ -140,3 +168,5 @@ export const getFavoriteFountains = async(favoriteIds) => {
 
     return fountains;
 }
+
+export default getFountain

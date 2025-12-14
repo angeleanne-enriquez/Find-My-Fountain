@@ -13,6 +13,29 @@
         />
       </div>
 
+      {{!Filter part}}
+        {{!Park}}
+        <div class = "filter-form">
+            <label for = "park"> Park name (optional):</label>
+                <input
+                    type="text"
+                    name="park"
+                    id="park"
+                    placeholder="Park Name"
+                />
+        </div>
+        {{!Rating}}
+        <div class = "filter-form">
+            <label for = "rating">Rating Greater Than (optional)</label>
+            <select>
+                <option value = "Select">Select Rating</option>
+                <option value = "1">1</option>
+                <option value = "2">2</option>
+                <option value = "3">3</option>
+                <option value = "4">4</option>
+                <option value = "5">5</option>
+            </select>
+        </div>
       <button type="submit">Search Fountains</button>
     </form>
   </section>
