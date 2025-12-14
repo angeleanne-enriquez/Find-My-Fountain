@@ -266,6 +266,8 @@ router
           let loginUser = null;
           if (req.session.user) loginUser = req.session.user;
 
+          let favoriteFountains = await fountainsData.getFavoriteFountains(favorites);
+
           return res.status(200).render("profile", {
             //returns page with that info
             title: `User: ${viewUsername}`,
@@ -274,7 +276,7 @@ router
               lastName: lastName,
               bio: bio,
               picture: picture,
-              favorites: favorites,
+              favorites: favoriteFountains,
               reviews: reviews,
               username: viewUsername
             },
