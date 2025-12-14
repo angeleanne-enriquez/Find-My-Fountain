@@ -39,14 +39,7 @@
         <ul>
           {{#each viewUser.favorites}}
             <li>
-              <a href="/fountains/{{this.id}}">{{this.name}}</a>
-              {{!-- Like/dislike buttons (can be wired later) --}}
-              <form action="/fountains/{{this.id}}/like" method="POST" style="display:inline;">
-                <button type="submit">Like</button>
-              </form>
-              <form action="/fountains/{{this.id}}/dislike" method="POST" style="display:inline;">
-                <button type="submit">Dislike</button>
-              </form>
+              <a href="/fountain/{{this._id}}">{{this.park}}, {{this.borough}}</a>
             </li>
           {{/each}}
         </ul>
@@ -100,8 +93,8 @@
 
   {{!-- Settings for your own profile --}}
   {{#if isOwnProfile}}
-    <a href="/user/{{user.username}}/settings">Update your profile</a>
-
+    <a href="/user/{{user.username}}/settings">Update your profile and settings</a>
+    <a href="/logout">Log Out</a>
     <hr />
   {{/if}}
 
