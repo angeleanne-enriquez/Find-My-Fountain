@@ -2,12 +2,12 @@
 <h1>Settings Page</h1>
 
     <main>
-        <p id="settingsError">{{#if errorMessages}} {{errorMessages}} {{/if}}</p>
-        <p id="settingsUpdated">{{#if message}} {{message}} {{/if}}</p>
+        <div class="error" hidden></div> 
+        <div class="updated" hidden></div>
 
         <p>Fill out the fields below to update your account settings.</p>
 
-        <form action='/user/:id/settings' method='post' id="signup-form" name="signup-form">
+        <form action='/user/:id/settings' method='post' id="settings-form" name="settings-form">
 
         <label for='firstName'>New First Name:</label>
         <br><input type='text' id='firstName' name='firstName' placeholder="New First Name"><br>
@@ -34,11 +34,11 @@
 
         <label for='privacy'>Privacy:</label>
         <br><select id='privacy' name="privacy">
-            <option value="private">Privater</option>
+            <option value="private">Private</option>
             <option value="public">Public</option>
             </select>
 
-        <input type='submit' id='submitButton' name='submitButton' value='Register'>
+        <input type='submit' id='submitButton' name='submitButton' value='Update'>
         </form>
 
         <a href="/user/{{user._id}}">Go to your profile</a>
