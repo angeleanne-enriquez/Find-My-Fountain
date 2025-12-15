@@ -1,6 +1,6 @@
 import * as h from "../helpers.js";
 import {fountains, reviews} from '../config/mongoCollections.js'
-import { setUncaughtExceptionCaptureCallback } from "node:process";
+
 //Add a review to the fountain and update its ratings
 export const addReview = async (fountainId, reviewId) => {
     //Validate fountainId
@@ -167,10 +167,8 @@ export const getFavoriteFountains = async(favoriteIds) => {
         fountainInfo["park"] = fountain["park"];
         fountainInfo["borough"] = fountain["borough"];
 
-        fountains.push(fountainInfo);
+        favoriteFountains.push(fountainInfo);
     }
 
     return favoriteFountains;
 }
-
-export default getFountain
