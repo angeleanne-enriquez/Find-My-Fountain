@@ -80,7 +80,11 @@
               {{/if}}
               <p>{{this.body}}</p>
 
-              
+              {{#if ../isOwnProfile}}
+                <form action="/review/{{this._id}}/delete" method="POST">
+                  <button type="submit">Delete</button>
+                </form>
+              {{/if}}
 
               {{!-- Only show edit/delete if this review is editable by the current user --}}
               {{!--{{#if this.canEdit}}
