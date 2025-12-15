@@ -81,7 +81,7 @@
               <p>{{this.body}}</p>
 
               {{#if ../isOwnProfile}}
-                <form action="/reviews/{{this._id}}/delete" method="POST">
+                <form action="/reviews/{{this.reviewId}}/delete" method="POST">
                   <button type="submit">Delete</button>
                 </form>
               {{/if}}

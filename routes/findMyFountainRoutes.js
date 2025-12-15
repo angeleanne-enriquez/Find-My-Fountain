@@ -367,6 +367,7 @@ router
           for (let x = 0; x < reviews.length; x++) {
             reviewFountains[x]["ratings"] = reviews[x]["ratings"];
             reviewFountains[x]["body"] = reviews[x]["body"];
+            reviewFountains[x]["reviewId"] = reviews[x]["_id"];
           }
 
           return res.status(200).render("profile", {
@@ -516,7 +517,8 @@ router
   .route('/reviews/:id/delete')
   .post(async (req, res) => {
     // code here for POST delete review
-    try {if(!req.params.id || req.params.id === "") throw "Error: no id provided";
+    try {
+      if(!req.params.id || req.params.id === "") throw "Error: no id provided";
 
       let reviewId = req.params.id;
 

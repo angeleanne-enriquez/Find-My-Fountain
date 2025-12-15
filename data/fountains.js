@@ -44,7 +44,7 @@ export const removeReview = async (reviewId) => {
     const review = await reviewCollection.findOne({"_id": reviewId});
     if (!review) throw "Review not found!";
 
-    let fountainId = review["fountain"];
+    let fountainId = h.checkValidID(review["fountain"]);
 
     //Get fountain
     const fountainCollection = await fountains();
@@ -52,7 +52,7 @@ export const removeReview = async (reviewId) => {
     if (!fountain) throw "Fountain not found!";
 
     let reviewList = fountain.reviews || [];
-    reviewList = reviewList.filter(id => id !== reviewId.toString());
+    reviewList = reviewList.filter(id => id.toString() !== reviewId.toString());
 
     //Recalculate the average ratings
     let avgRatings = await calculateAverages(reviewList);
@@ -84,7 +84,9 @@ export const calculateAverages = async (reviewIds) => {
     let validCount = 0;
 
     //Go through each review and add its ratings
-    for (const reviewId of reviewIds) {
+    for (let reviewId of reviewIds) {
+        reviewId = h.checkValidID(reviewId);
+
         const review = await reviewCollection.findOne({"_id": reviewId});
         //If the review was deleted, do not use it in the calculations
         if (!review) continue;
@@ -100,6 +102,8 @@ export const calculateAverages = async (reviewIds) => {
         if (reviewRatings.operational) operationalSum++;
         validCount++;
     }
+
+    if (validCount == 0) return null;
 
     //Determines if enough people have flagged the fountain as non-operational for the flag to be visible
     const operational = (validCount - operationalSum) > operationalThreshold;
