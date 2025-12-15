@@ -120,6 +120,8 @@ router
             
             //registering 
             let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture,privacy)
+
+            if(!newUser) throw "Error: unable to register user."
             //take back to home but now logged in 
             return res.status(200).redirect("/login")
         } catch(e) {
