@@ -34,6 +34,38 @@ export const addReview = async (fountainId, reviewId) => {
     });
 };
 
+//Remove a review to the fountain and update its ratings
+export const removeReview = async (reviewId) => {
+    //Valiate reviewId
+    reviewId = h.checkValidID(reviewId, "Review id");
+
+    //Get review
+    const reviewCollection = await reviews();
+    const review = await reviewCollection.findOne({"_id": reviewId});
+    if (!review) throw "Review not found!";
+
+    let fountainId = h.checkValidID(review["fountain"]);
+
+    //Get fountain
+    const fountainCollection = await fountains();
+    const fountain = await fountainCollection.findOne({"_id": fountainId});
+    if (!fountain) throw "Fountain not found!";
+
+    let reviewList = fountain.reviews || [];
+    reviewList = reviewList.filter(id => id !== reviewId.toString());
+
+    //Recalculate the average ratings
+    let avgRatings = await calculateAverages(reviewList);
+
+    //Update the fountain
+    await fountainCollection.updateOne({"_id": fountainId}, {$set:
+        {
+            reviews: reviewList,
+            avgRatings: avgRatings
+        }
+    });
+};
+
 //Returns the avgRatings object based on the given list of review ids
 export const calculateAverages = async (reviewIds) => {
     //The minimum difference in the number of people who need to report a fountain as nonoperational for the fountain to be flagged

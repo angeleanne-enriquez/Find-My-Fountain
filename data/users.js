@@ -189,6 +189,37 @@ export const addReview = async (reviewId, username) => {
   );
 };
 
+//Adds a review to the user's review list
+export const removeReview = async (reviewId) => {
+  //validate reviewId
+  reviewId = h.checkValidID(reviewId, "Review id");
+
+  //Get the review collection
+  const reviewCollection = await reviews();
+
+  //Make sure this review exists
+  const review = await reviewCollection.findOne({ _id: reviewId });
+  if (!review) throw "Review does not exist!";
+
+  //Validate username
+  username = h.checkValidString(review["username"], 2, 20, "Username");
+
+  //Retrieve user
+  const userCollection = await users();
+  const user = await userCollection.findOne({"username": username });
+
+  if (!user) throw "User could not be found!";
+
+  //Add the review to the user profile
+  let reviewList = user["reviews"];
+  reviewList = reviewList.filter(id => id !== reviewId.toString());
+
+  await userCollection.updateOne(
+    { "username": username },
+    { $set: { reviews: reviewList } }
+  );
+};
+
 //Retrieves a given user's information
 export const getUserProfile = async (username) => {
   //Validate username
