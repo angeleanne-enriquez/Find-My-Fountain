@@ -52,6 +52,10 @@ if(signupForm.length){
             //bio
             if(bio.val().trim() !== "") bio.val(h.checkValidString(bio.val(), 20, 255, "Bio"));
 
+            //picture
+            if(picture.val().trim() !== "") 
+            else picture.val("https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg")
+
             //privacy
             privacy.val(privacy.val().trim().toLowerCase());
             if(privacy.val() !== "private" && privacy.val() !== "public") throw "Error: privacy must only be 'private' or 'public'";
@@ -118,6 +122,9 @@ if(settingsForm.length){
             //bio
             if(bio.val().trim() !== "") bio.val(h.checkValidString(bio.val(), 20, 255, "Bio"));
 
+            //picture
+            if(picture.val().trim() !== "") 
+            
             //privacy
             if(privacy.val().trim() !=="") {
                 privacy.val(privacy.val().trim().toLowerCase());
