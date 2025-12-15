@@ -213,7 +213,7 @@ export const removeReview = async (reviewId) => {
   if (!review) throw "Review does not exist!";
 
   //Validate username
-  username = h.checkValidString(review["username"], 2, 20, "Username");
+  let username = h.checkValidString(review["username"], 2, 20, "Username");
 
   //Retrieve user
   const userCollection = await users();
