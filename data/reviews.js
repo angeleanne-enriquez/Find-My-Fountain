@@ -81,7 +81,7 @@ export const createReview = async (username, fountainId, body, ratings) => {
 };
 
 //Creates a new review
-export const createReview = async (reviewId) => {
+export const removeReview = async (reviewId) => {
     //Validate reviewId
     reviewId = h.checkValidID(reviewId);
 
