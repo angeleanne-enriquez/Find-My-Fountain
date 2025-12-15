@@ -133,7 +133,7 @@ router
       let ratingFilter = req.body.rating
 
       let fountainBoroughs = await fountainsData.fountainByBorough(req.body.q,parkFilter,ratingFilter)
-      res.render('searchResults',{borough:req.body.q,fountainBoroughs:fountainBoroughs})
+      return res.status(200).render('searchResults',{borough:req.body.q,fountainBoroughs:fountainBoroughs})
     } catch(e){
       //error message
       return res.status(403).render("error", {error:e})
