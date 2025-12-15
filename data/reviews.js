@@ -72,7 +72,7 @@ export const createReview = async (username, fountainId, body, ratings) => {
     if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add review!';
 
     //Update the reviewList and average ratings of the fountain
-    f.addReview(fountainId, insertInfo.insertedId);
+    await f.addReview(fountainId, insertInfo.insertedId);
     
     return getReviewContent(insertInfo.insertedId);
 };

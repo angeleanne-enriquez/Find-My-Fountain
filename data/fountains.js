@@ -12,21 +12,18 @@ export const addReview = async (fountainId, reviewId) => {
     //Get review
     const reviewCollection = await reviews();
     const review = await reviewCollection.findOne({"_id": reviewId});
-
     if (!review) throw "Review not found!";
 
     //Get fountain
     const fountainCollection = await fountains();
     const fountain = await fountainCollection.findOne({"_id": fountainId});
-
     if (!fountain) throw "Fountain not found!";
 
-    let reviewList = fountain["reviews"];
-
-    reviewList.push(review);
+    let reviewList = fountain.reviews || [];
+    reviewList.push(reviewId);
 
     //Recalculate the average ratings
-    let avgRatings = calculateAverages(reviewList);
+    const avgRatings = calculateAverages(reviewList);
 
     //Update the fountain
     await reviewCollection.updateOne({"_id": reviewId}, {$set:
@@ -38,42 +35,52 @@ export const addReview = async (fountainId, reviewId) => {
 };
 
 //Returns the avgRatings object based on the given list of review ids
-export const calculateAverages = async (reviews) => {
+export const calculateAverages = async (reviewIds) => {
     //The minimum difference in the number of people who need to report a fountain as nonoperational for the fountain to be flagged
     const operationalThreshold = 5;
 
     //All of our ratings
-    tasteSum = locationSum = pressureSum = cleanlinessSum = accessibilitySum = operationalSum = 0;
+    let tasteSum = 0;
+    let locationSum = 0;
+    let pressureSum = 0;
+    let cleanlinessSum = 0;
+    let accessibilitySum = 0;
+    let operationalSum = 0;
     
     const reviewCollection = await reviews();
 
+    let validCount = 0;
+
     //Go through each review and add its ratings
-    for (let reviewId of reviews) {
+    for (const reviewId of reviewIds) {
         const review = await reviewCollection.findOne({"_id": reviewId});
         //If the review was deleted, do not use it in the calculations
         if (!review) continue;
 
         const reviewRatings = review["ratings"];
 
-        tasteSum += reviewRatings["taste"]
-        locationSum += reviewRatings["location"]
-        pressureSum += reviewRatings["pressure"]
-        cleanlinessSum += reviewRatings["cleanliness"]
-        accessibilitySum += reviewRatings["accessibility"]
+        tasteSum += reviewRatings.taste
+        locationSum += reviewRatings.location
+        pressureSum += reviewRatings.pressure
+        cleanlinessSum += reviewRatings.cleanliness
+        accessibilitySum += reviewRatings.accessibility
 
-        if (reviewRatings["operational"]) operationalSum++;
+        if (reviewRatings.operational) operationalSum++;
+        validCount++;
     }
 
-    //Determines if enough people have flagged the fountain as non-operational for the flag to be visible
-    operational = ((reviews.length - operationalSum) > operationalThreshold);
+    if (validCount === 0)
+        return null;
 
+    //Determines if enough people have flagged the fountain as non-operational for the flag to be visible
+    const operational = (validCount - operationalSum) > operationalThreshold;
     //Average each rating
     let avgRatings = {
-        taste: tasteSum/reviews.length,
-        location: locationSum/reviews.length,
-        pressure: pressureSum/reviews.length,
-        cleanliness: cleanlinessSum/reviews.length,
-        accessibility: accessibilitySum/reviews.length,
+        taste: tasteSum / validCount,
+        location: locationSum / validCount,
+        pressure: pressureSum / validCount,
+        cleanliness: cleanlinessSum / validCount,
+        accessibility: accessibilitySum / validCount,
         operational: operational
     };
 
@@ -153,7 +160,7 @@ export const fountainByBorough = async(borough,parkFilter,ratingFilter) => {
 
 //Takes a list of ids and returns a list of fountain info (id, park, borough)
 export const getFavoriteFountains = async(favoriteIds) => {
-    let fountains = []
+    let favoriteFountains = []
     for (let fountainId of favoriteIds) {
         let fountain = await getFountain(fountainId);
 
@@ -166,7 +173,7 @@ export const getFavoriteFountains = async(favoriteIds) => {
         fountains.push(fountainInfo);
     }
 
-    return fountains;
+    return favoriteFountains;
 }
 
 export default getFountain
