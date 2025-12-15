@@ -312,7 +312,6 @@ router
           let bio = viewUser.bio;
           let picture = viewUser.picture;
           let favorites = viewUser.favorites;
-          let reviews = viewUser.reviews;
 
           let isOwnProfile = ((req.session.user) && (req.session.user.username === viewUser.username));
           
@@ -320,6 +319,17 @@ router
           if (req.session.user) loginUser = req.session.user;
 
           let favoriteFountains = await fountainsData.getFavoriteFountains(favorites);
+
+          //Get all reviews
+          let reviews = await reviewsData.getReviewsByUsername(viewUser.username);
+          let reviewFountainIds = reviews.map(review => review["fountain"]);
+
+          let reviewFountains = await fountainsData.getFavoriteFountains(reviewFountainIds);
+
+          for (let x = 0; x < reviews.length; x++) {
+            reviewFountains[x]["ratings"] = reviews[x]["ratings"];
+            reviewFountains[x]["body"] = reviews[x]["body"];
+          }
 
           return res.status(200).render("profile", {
             //returns page with that info
@@ -330,7 +340,7 @@ router
               bio: bio,
               picture: picture,
               favorites: favoriteFountains,
-              reviews: reviews,
+              reviews: reviewFountains,
               username: viewUsername
             },
             user: loginUser,

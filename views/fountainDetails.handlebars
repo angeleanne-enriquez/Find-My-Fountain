@@ -70,7 +70,7 @@
           {{#each reviews}}
             <li>
               <p>
-                <strong>Reviewer:</strong> {{this.username}}
+                <a href="../user/{{this.username}}"><strong>Reviewer:</strong> {{this.username}}</a>
                 {{#if this.date}}
                   - {{this.date}}
                 {{/if}}
