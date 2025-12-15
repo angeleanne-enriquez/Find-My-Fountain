@@ -35,7 +35,7 @@ export const registerUsers = async (
   if(bio.trim() !== "") bio = h.checkValidString(bio, 20, 255, "Bio");
 
   //Validate picture
-
+    
   //Validate privacy
   privacy = privacy.trim().toLowerCase();
   if(privacy !== "private" && privacy !== "public") throw "Error: privacy must only be 'private' or 'public'";
