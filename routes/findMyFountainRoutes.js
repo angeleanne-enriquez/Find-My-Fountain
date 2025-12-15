@@ -38,7 +38,8 @@ router
   .get(async (req, res) => {
     // code here for GET login page
     try {
-      return res.status(200).render('login')
+      if(!req.session.user) return res.status(200).render('login');
+      else throw "Error: User cannot log in after already logging in."
     }catch(e){
       //error message
       return res.status(500).render("error", {error:e})
@@ -94,7 +95,16 @@ router
   .route('/logout')
   .get(async (req, res) => {
     // code here for GET logout (clear session, redirect or render page)
-    
+    try {
+        req.session.destroy();
+        res.clearCookie("AuthenticationState");
+        return res.status(200).render("logout", { title: "Logged Out" });
+    } catch (e) {
+        return res.status(403).render("error", {
+        title: "Log Out",
+        error: e,
+      });
+    }
   });
 
 
@@ -114,6 +124,20 @@ router
   })
   .post(async (req, res) => {
     // code here for POST search (use filters, return searchResults view)
+    try{
+      if (!req.body.q){
+        req.body.q = ''
+      }
+      //filters
+      let parkFilter = req.body.park
+      let ratingFilter = req.body.rating
+
+      let fountainBoroughs = await fountainsData.fountainByBorough(req.body.q,parkFilter,ratingFilter)
+      res.render('searchResults',{borough:req.body.q,fountainBoroughs:fountainBoroughs})
+    } catch(e){
+      //error message
+      return res.status(403).render("error", {error:e})
+    }
   });
 
 
@@ -126,25 +150,44 @@ router
     // code here for GET fountain details
     try {
         //checking if fountain exists
-        const fountainId = req.params.id;
+        if(!req.params.id || req.params.id === "") throw "Error: no id provided";
 
-        // get fountain from DB
-        const fountain = await fountainsData.getFountain(fountainId);
+        let fountainId = req.params.id;
+        let fountain = await fountainsData.getFountain(fountainId);
 
-        // Get reviews for this fountain
-        const reviews = await reviewsData.getReviewsByFountainId(fountainId);
+        if(!fountain) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: fountain cannot be found",
+            errorClass: "error",
+            link: "/fountain",
+        });
+
+        if(fountain.operational === false) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: fountain is not working",
+            errorClass: "error",
+            link: "/fountain",
+        })
+
+        let user = null,
+            favorited = false,
+            reviews = await reviewsData.getReviewsByFountainId(fountainId);
+
+        if(req.session.user) {
+            user = req.session.user;
+            
+            let userData = await usersData.getUserProfile(user.username);
+            let favorites = await userData["favorites"];
+
+            favorited = (favorites.includes(req.params.id));
+        }
         
         // Simple location display string
         let locationDisplay = 'Location data not available';
         if (Array.isArray(fountain.location) && fountain.location.length === 2) 
           locationDisplay = `${fountain.location[0]}, ${fountain.location[1]}`;
-
-        // Logged-in user
-        const user = req.session.user || null;
-
-        let favorited = false;
-        if (user && Array.isArray(user.favorites)) 
-          favorited = user.favorites.includes(fountainId);
 
         return res.status(200).render('fountainDetails', {
           title: 'Fountain Details',
@@ -161,35 +204,57 @@ router
   .post(async (req, res) => {
     // code here for POST new review / mark as working
     try {
-      if (!req.session || !req.session.user) {
-        return res
-          .status(401)
-          .json({ error: 'You must be logged in to submit a review.' });
-      }
+        if(!req.params.id || req.params.id === "") throw "Error: no id provided";
 
-      const fountainId = req.params.id;
-      const username = req.session.user.username; // from your session
+        let fountainId = req.params.id;
+        let fountain = await fountainsData.getFountain(fountainId);
 
-      const body = req.body.reviewText;
+        if(!fountain) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: fountain cannot be found",
+            errorClass: "error",
+            link: "/fountain",
+        });
 
-      const ratings = {
-        taste: Number(req.body.taste),
-        location: Number(req.body.location),
-        pressure: Number(req.body.pressure),
-        cleanliness: Number(req.body.cleanliness),
-        accessibility: Number(req.body.accessibility),
-        operational:
-          req.body.operational === 'true' ||
-          req.body.operational === 'on' ||
-          req.body.operational === true
-      };
+     //checking if fountain is operational
+        if(fountain.operational === false) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: fountain is not working",
+            errorClass: "error",
+            link: "/fountain",
+        })
 
-      await reviewsData.createReview(username, fountainId, body, ratings);
+        if(!req.session.user) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: user must be logged in to write/edit/delete a review",
+            errorClass: "error",
+            link: "/fountain",
+        })
 
-      // For Ajax: tell the client it worked
-      return res.json({ reviewCreated: true });
-    } catch (e) {
-      return res.status(400).json({ error: e.toString() });
+        let user = req.session.user.username,
+            reviewText = req.body.reviewText,
+            ratings = {
+            taste: req.body.taste,
+            location: req.body.location,
+            pressure: req.body.pressure,
+            cleanliness: req.body.cleanliness, 
+            accessiblity: req.body.accessibility,
+            operational: req.body.operational}
+
+        let review = await reviewsData.createReview(user, fountainId, reviewText, ratings);
+        if(!review) throw "Error: unable to create review/mark fountain as un/operational.";
+
+        let reviewAdded = await fountainsData.addReview(fountainId, review._id);
+        if(!reviewAdded) throw "Error: unable to add review/mark fountain as un/operational.";
+
+        let reviews = fountain.reviews;
+
+        return res.status(200).render('fountainDetails',fountain, user, reviews);
+    } catch(e) {
+        return res.status(403).render("error", {error:e})
     }
   });
 
@@ -197,12 +262,28 @@ router
   .route('/fountain/:id/like')
   .post(async (req, res) => {
     // code here for POST like fountain
+    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged in to favorite!"});
+
+    let user = req.session.user;
+    let fountainId = req.params.id;
+
+    await usersData.addFavoriteFountain(fountainId, user.username);
+
+    res.redirect(req.get("referer"));
   });
 
 router
   .route('/fountain/:id/dislike')
   .post(async (req, res) => {
     // code here for POST dislike fountain
+    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged in to unfavorite!"});
+
+    let user = req.session.user;
+    let fountainId = req.params.id;
+
+    await usersData.removeFavoriteFountain(fountainId, user.username);
+
+    res.redirect(req.get("referer"));
   });
 
 
@@ -215,75 +296,85 @@ router
   .get(async (req, res) => {
     // code here for GET user profile
     try {
-        if (!req.params.id || req.params.id === "")
+        if (!req.params.username || req.params.username === "") 
           //check if username is in the route
-          throw "Error: no user id provided";
+          throw "Error: no username provided";
     
-        let username = req.params.username; //check if user exists; throws otherwise
-        let user = await usersData.getUserProfile(username);
+        let viewUsername = req.params.username; //check if user exists; throws otherwise
+        let viewUser = await usersData.getUserProfile(viewUsername);
 
-        if(req.session.user.username === username || user.privacy === "public"){
-    
-        let firstName = user.firstName; //get all the info abt the user to display on the page
-        let lastName = user.lastName;
-        let bio = user.bio;
-        let picture = user.picture;
-        let favorites = user.favorites;
-        let reviews = user.reviews;
-        //   let likedFountains = userName.likedFountains;,
-        //   dislikedFountains = userName.dislikedFountains;,
-        //   privacy = userName.privacy;,
-        //   role = userName.role;
-    
-        return res.status(200).render("profile", {
-          //returns page with that info
-          title: `User: ${username}`,
-          firstName,
-          lastName,
-          bio,
-          picture,
-          favorites,
-          reviews,
-          //   likedFountains,
-          //   dislikedFountains,
-          //   privacy,
-          //   role
-        });}
+        if(!viewUser) return res.status(403)
+            .render("error", {
+            title: "Error",
+            error: "Error: user cannot be found",
+            errorClass: "error",
+            link: "/user",
+        });
+
+        if(((req.session.user) && (req.session.user.username === viewUser.username)) || viewUser.privacy === "public") {
+          
+          let firstName = viewUser.firstName; //get all the info abt the user to display on the page
+          let lastName = viewUser.lastName;
+          let bio = viewUser.bio;
+          let picture = viewUser.picture;
+          let favorites = viewUser.favorites;
+          let reviews = viewUser.reviews;
+
+          let isOwnProfile = ((req.session.user) && (req.session.user.username === viewUser.username));
+          
+          let loginUser = null;
+          if (req.session.user) loginUser = req.session.user;
+
+          let favoriteFountains = await fountainsData.getFavoriteFountains(favorites);
+
+          return res.status(200).render("profile", {
+            //returns page with that info
+            title: `User: ${viewUsername}`,
+            viewUser: {
+              firstName: firstName,
+              lastName: lastName,
+              bio: bio,
+              picture: picture,
+              favorites: favoriteFountains,
+              reviews: reviews,
+              username: viewUsername
+            },
+            user: loginUser,
+            isOwnProfile: isOwnProfile
+          });
+        }
         else throw "Error: This user is private.";
       } catch (e) {
         return res.status(403).render("error", {
           //renders error page if there is an error
           title: "User",
-          errorMessages: e,
+          error: e,
           errorClass: "error", 
         });
       }
-  })
-  .post(async (req, res) => {
-    // code here for POST profile updates
   });
 
 
 /* ========== Settings for user ========== */
 router
-  .route("/user/:id/settings")
+  .route("/user/:username/settings")
   .get(async (req, res) => {
     try {
-      if (!req.params.id || req.params.id === "")
+      if (!req.params.username || req.params.username === "")
         //checks if username is in the route
-        throw "Error: no userlink provided";
+        throw "Error: no username provided";
 
       let username = req.params.username; //checks if user exists
       await usersData.getUserProfile(username);
 
-      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings", user: {username: username }}); //renders status page
       else throw "Error: cannot look at user's settings that are not your own."
 
     } catch (e) {
       return res.status(403).render("error", {
         //renders error page if there was an error
         title: "Settings",
-        errorMessages: e,
+        error: e,
         errorClass: "settingsError",
       });
     }
@@ -292,6 +383,8 @@ router
   .post(async (req, res) => {
     //code here for POST
     try {
+      if(!req.params.username || req.params.username === "") throw "Error: no username provided";
+        
       if (req.session.user.username !== req.params.username)
         //checks if user is the same as the one on the page to be able to edit settings
         throw "Error: Cannot edit the settings of another user";
@@ -357,7 +450,7 @@ router
       return res.status(403).render("error", {
         //renders error page if there was an error
         title: "Settings",
-        errorMessages: e,
+        error: e,
         errorClass: "settingsError",
       });
     }
