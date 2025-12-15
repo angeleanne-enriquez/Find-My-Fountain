@@ -39,7 +39,7 @@ export const checkValidID = (id) => {
 //Validates a given boolean
 export const checkValidBoolean = (bool, errorName) => {
     if (!bool) throw `${errorName} must be defined!`;
-    if (typeof bool !== "bollean") throw `${errorName} must be a boolean!`;
+    if (typeof bool !== "boolean") throw `${errorName} must be a boolean!`;
 };
 
 //Validate email
@@ -62,3 +62,15 @@ export const checkValidPassword = (password, min, max, errorName) => {
 
     return password;
 }
+
+//Converts a js date object to a MM/DD/YYYY format
+export const formatDate = (date) => {
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    if (month < 10) month = `0${month}`;
+    if (day < 10) day = `0${day}`;
+
+    return `${month}/${day}/${year}`;
+};

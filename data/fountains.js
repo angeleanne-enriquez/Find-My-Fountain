@@ -26,10 +26,10 @@ export const addReview = async (fountainId, reviewId) => {
     reviewList.push(review);
 
     //Recalculate the average ratings
-    let avgRatings = calculateAverages(reviewList);
+    let avgRatings = await calculateAverages(reviewList);
 
     //Update the fountain
-    await reviewCollection.updateOne({"_id": reviewId}, {$set:
+    await fountainCollection.updateOne({"_id": fountainId}, {$set:
         {
             reviews: reviewList,
             avgRatings: avgRatings
@@ -38,17 +38,22 @@ export const addReview = async (fountainId, reviewId) => {
 };
 
 //Returns the avgRatings object based on the given list of review ids
-export const calculateAverages = async (reviews) => {
+export const calculateAverages = async (ratings) => {
     //The minimum difference in the number of people who need to report a fountain as nonoperational for the fountain to be flagged
     const operationalThreshold = 5;
 
     //All of our ratings
-    tasteSum = locationSum = pressureSum = cleanlinessSum = accessibilitySum = operationalSum = 0;
+    let tasteSum = 0;
+    let locationSum = 0;
+    let pressureSum = 0;
+    let cleanlinessSum = 0;
+    let accessibilitySum = 0;
+    let operationalSum = 0;
     
     const reviewCollection = await reviews();
 
     //Go through each review and add its ratings
-    for (let reviewId of reviews) {
+    for (let reviewId of ratings) {
         const review = await reviewCollection.findOne({"_id": reviewId});
         //If the review was deleted, do not use it in the calculations
         if (!review) continue;
@@ -65,15 +70,15 @@ export const calculateAverages = async (reviews) => {
     }
 
     //Determines if enough people have flagged the fountain as non-operational for the flag to be visible
-    operational = ((reviews.length - operationalSum) > operationalThreshold);
+    let operational = ((ratings.length - operationalSum) > operationalThreshold);
 
     //Average each rating
     let avgRatings = {
-        taste: tasteSum/reviews.length,
-        location: locationSum/reviews.length,
-        pressure: pressureSum/reviews.length,
-        cleanliness: cleanlinessSum/reviews.length,
-        accessibility: accessibilitySum/reviews.length,
+        taste: tasteSum/ratings.length,
+        location: locationSum/ratings.length,
+        pressure: pressureSum/ratings.length,
+        cleanliness: cleanlinessSum/ratings.length,
+        accessibility: accessibilitySum/ratings.length,
         operational: operational
     };
 
