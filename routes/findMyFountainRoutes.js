@@ -478,13 +478,19 @@ router
   .route('/reviews/:id/delete')
   .post(async (req, res) => {
     // code here for POST delete review
-    if(!req.params.id || req.params.id === "") throw "Error: no id provided";
+    try {if(!req.params.id || req.params.id === "") throw "Error: no id provided";
 
-    let reviewId = req.params.id;
+      let reviewId = req.params.id;
 
-    reviewsData.removeReview(reviewId);
+      await reviewsData.removeReview(reviewId);
 
-    res.redirect(req.get("referer"));
+      res.redirect(req.get("referer"));
+    } catch (e) {
+      return res.status(400).render('error', {
+        title: 'Error',
+        error: e
+      });
+    }
   });
 
 // Add a comment to a review
