@@ -1,4 +1,4 @@
-/*This file should have 15 CSS rulesets */
+/*This file should have 15 CSS rulesets 
 :root {
   --background: #ecd9dc;
   --border: #afafaf;
@@ -65,4 +65,232 @@ a:visited{
 
 a:hover{
   color: var(--linkHover);
+}
+
+*/
+
+/*This file should have 10 CSS rulesets */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 14pt;
+}
+
+body {
+  font-size: 14pt;
+  background-color: #daeefc;
+  font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
+  margin: 0;
+  padding: 0;
+  color: #222222
+}
+
+/* Container for the entire page - Mainly used to make main content centered and not super wide, used on most handlebars */
+.page-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+/* Card style for boxes used on most pages */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #a8c7ed;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+main {
+  max-width: 75%;
+  margin: auto;
+}
+
+header {
+  border-bottom: 1px solid #afafaf;
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+
+p {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+ul {
+  padding-left: 20px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+li {
+  margin-bottom: 5px
+}
+
+/* Horizontal rule spacing */
+hr {
+  margin: 20px 0;
+}
+
+img{
+  height: 117px;
+  width: 75px;
+}
+
+/* Navigation & layout links */
+.site-header {
+  background-color: #0066cc;
+  color: #ffffff;
+  padding: 10px 0;
+}
+
+/* Site title link*/
+.nav-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.nav-links a {
+  margin-right: 10px;
+}
+
+.site-footer {
+  background-color: #d6e4ff;
+  text-align: center;
+  padding: 10px 15px;
+  margin-top: 30px;
+  font-size: 14px;
+}
+
+/* Links */
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:visited{
+  color:purple
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+.link-row {
+  margin-bottom: 15px;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Basic text inputs, email, password, textarea, select */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+textarea {
+  min-height: 80px;
+}
+
+/* ---------- Buttons ---------- */
+
+button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #0066cc;
+  color: #ffffff;
+  font-size: 14px;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+button:hover {
+  background-color: #00396e;
+}
+
+/* Profile-specific */
+
+.profile-picture {
+width: 120px;
+height: 120px;
+border-radius: 50%;
+border: 1px solid #cccccc;
+object-fit: cover;
+margin-top: 10px;
+margin-bottom: 10px;
+}
+
+/* Error text */
+
+.error {
+color: #b00020;
+font-style: italic;
+margin-top: 5px;
+}
+
+
+/* Some new rulesets */
+
+/* Card headings in blue */
+.card h1 {
+color: #004a99;
+}
+
+/* Section headings also slightly lighter blue */
+.card h2 {
+color: #0066cc;
+}
+
+/* lightly tinted background for rating number fields (fountain page) */
+input[type="number"] {
+width: 100%;
+max-width: 400px;
+padding: 8px;
+border: 1px solid #cccccc;
+border-radius: 4px;
+background-color: #f5f9ff; /* very light blue tint */
+box-sizing: border-box;
+}
+
+/* Focus state for form controls (blue outline) */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+outline: 2px solid #66a3ff;
+border-color: #66a3ff;
+}
+
+/* Direct paragraphs under .page-container (e.g., landing / login intro text) */
+.page-container > p {
+color: #123456;
+margin-bottom: 15px;
 }
