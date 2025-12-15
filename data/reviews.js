@@ -80,6 +80,25 @@ export const createReview = async (username, fountainId, body, ratings) => {
     u.addReview(insertInfo.insertedId, username);
 };
 
+//Creates a new review
+export const removeReview = async (reviewId) => {
+    //Validate reviewId
+    reviewId = h.checkValidID(reviewId);
+
+    //Get reviews collection
+    const reviewCollection = await reviews();
+
+    //Update the reviewList and average ratings of the fountain
+    await f.removeReview(reviewId.toString());
+
+    //Update the reviewList of the user
+    await u.removeReview(reviewId.toString());
+
+    //Upload new review to database
+    const insertInfo = await reviewCollection.deleteOne({_id: reviewId});
+    if (!insertInfo.acknowledged) throw 'Could not delete review!';
+};
+
 //Adds a user comment to a review
 export const addComment = async (reviewId, username, body) => {
     //Validate reviewId

@@ -13,9 +13,14 @@ let signupForm = $("#signup-form"),
     picture = $("#picture"),
     privacy = $("#privacy"),
     error = $(".error"),
-//all the variables for the login page incl the ones above 
+//all the variables for the settings page incl the ones above 
     settingsForm = $("#settings-form"),
     updated = $(".updated")
+// //all the variables for the search landing and search results page incl the ones above 
+//     searchLandingForm = $("#landing-search-form"),
+//     searchQuery = $("#q"),
+//     parkName = $("#park"),
+//     rating = $("#rating")
 
 if(signupForm.length){
     signupForm.on("submit", function(event) {
@@ -90,29 +95,33 @@ if(settingsForm.length){
         //checking inputs
         try{ 
             //firstName
-            firstName.val(h.checkValidString(firstName.val(), 2, 20, "First name"));
-            if(!/^[A-Za-z]+$/.test(firstName.val())) throw "Error: First name can only have letters."
+            if(firstName.val().trim() !== "") {
+                firstName.val(h.checkValidString(firstName.val(), 2, 20, "First name"));
+                if(!/^[A-Za-z]+$/.test(firstName.val())) throw "Error: First name can only have letters."}
 
             //lastName
-            lastName.val(h.checkValidString(lastName.val(), 2, 20, "Last name"));
-            if(!/^[A-Za-z]+$/.test(lastName.val())) throw "Error: Last name can only have letters."
+            if(lastName.val().trim() !== "") {
+                lastName.val(h.checkValidString(lastName.val(), 2, 20, "Last name"));
+                if(!/^[A-Za-z]+$/.test(lastName.val())) throw "Error: Last name can only have letters."}
 
             //email
-            email.val(h.checkValidEmail(email.val(), "Email address"));
+            if(email.val().trim() !== "") email.val(h.checkValidEmail(email.val(), "Email address"));
 
             //password + if matching
-            password.val(h.checkValidPassword(password.val(), 8, null, "Password"));
-            if(password.val() !== confirmPassword.val()) throw "Error: passwords must be matching";
+            if(password.val().trim() !== ""){
+                password.val(h.checkValidPassword(password.val(), 8, null, "Password"));
+                if(password.val() !== confirmPassword.val()) throw "Error: passwords must be matching";}
 
             //username
-            username.val(h.checkValidString(username.val(), 2, 20, "Username"));
+            if(username.val().trim() !== "") username.val(h.checkValidString(username.val(), 2, 20, "Username"));
 
             //bio
             if(bio.val().trim() !== "") bio.val(h.checkValidString(bio.val(), 20, 255, "Bio"));
 
             //privacy
-            privacy.val(privacy.val().trim().toLowerCase());
-            if(privacy.val() !== "private" && privacy.val() !== "public") throw "Error: privacy must only be 'private' or 'public'";
+            if(privacy.val().trim() !=="") {
+                privacy.val(privacy.val().trim().toLowerCase());
+                if(privacy.val() !== "private" && privacy.val() !== "public") throw "Error: privacy must only be 'private' or 'public'";}
 
             //updates the settings if no errors have been thrown
             $.ajax({
@@ -141,6 +150,41 @@ if(settingsForm.length){
         }
     })
 }
+
+// if(searchLandingForm.length){
+//     searchLandingForm.on("submit", function(event) {
+//         event.preventDefault();
+
+//         error.prop("hidden", true).text("");
+
+//         //checking inputs
+//         try { 
+//             searchQuery.val(h.checkValidString(searchQuery.val(), 2, 20, "Search Query"));
+//             if(!/^[A-Za-z ]+$/.test(searchQuery.val())) throw "Error: Search query can only have letters."
+            
+//             if(parkName.val().trim() !== "") parkName.val(h.checkValidString(parkName.val(),2,50,"Park Name"));
+
+//             if(rating.val().trim() !== "" && rating.val() !== "Select") rating.val(h.checkValidNumber(rating.val(),1,5,"Rating"));
+        
+//         $.ajax({
+//                 method: "POST",
+//                 url: searchLandingForm.attr("action"),
+//                 contentType: "application/json",
+//                 data: JSON.stringify({
+//                     q: searchQuery.val(),
+//                     park: parkName.val(),
+//                     rating: rating.val()})
+//             }).then(function() {
+//                 window.location.assign(res.redirectTo);
+//             }).fail(function() {
+//                 searchLandingForm.trigger("reset");
+//                 error.text("Failed to search fountains.").prop("hidden", false);})            
+//         } catch(e) {
+//             searchLandingForm.trigger("reset");
+//             error.text(e).prop("hidden", false);
+//         }
+//     })
+// }
 
 // Login form validation
 const loginForm = $('#login-form');
