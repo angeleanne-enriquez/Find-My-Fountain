@@ -477,9 +477,6 @@ router
       );
 
       if (edited.settingsUpdated === true) {
-        //checks if settings were updated
-        await usersData.getUserProfile(username); //checks if user exists
-
         return res.status(400).render("settings", {
           //renders settings page with that message
           title: "Settings",
