@@ -148,3 +148,18 @@ export const getReviewsByFountainId = async (fountainId) => {
   
     return reviewList;
   };
+
+//Gets all reviews of a user
+export const getReviewsByUsername = async (username) => {
+    // validate the id
+    username = h.checkValidString(username, 2, 20, "Username").toLowerCase();
+  
+    const reviewCollection = await reviews();
+  
+    // get all reviews whose fountain field matches this fountainId
+    const reviewList = await reviewCollection
+      .find({ username: username })
+      .toArray();
+  
+    return reviewList;
+};
