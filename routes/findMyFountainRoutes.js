@@ -70,7 +70,6 @@ router
 
       // store what the data layer actually returns
       req.session.user = {
-        _id: didLogin._id,
         username: didLogin.username,
         firstName: didLogin.firstName,
         lastName: didLogin.lastName,
@@ -79,7 +78,7 @@ router
       };
 
       // redirect to this user's profile page
-      return res.redirect(`/user/${req.session.user._id}`);
+      return res.redirect(`/user/${req.session.user.username}`);
     } catch (e) {
       // invalid username/password or other error
       return res.status(400).render('login', {
@@ -277,7 +276,7 @@ router
       let username = req.params.id; //checks if user exists
       await usersData.getUserProfile(username);
 
-      if(username === req.session.user._id) return res.status(200).render("settings", { title: "Settings" }); //renders status page
+      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
       else throw "Error: cannot look at user's settings that are not your own."
 
     } catch (e) {
@@ -293,11 +292,11 @@ router
   .post(async (req, res) => {
     //code here for POST
     try {
-      if (req.session.user._id !== req.params.id)
+      if (req.session.user.username !== req.params.id)
         //checks if user is the same as the one on the page to be able to edit settings
         throw "Error: Cannot edit the settings of another user";
 
-      let username = req.session.user._id;
+      let username = req.session.user.username;
 
       let settingsFields = [
         //checks if there is at least one field that is going to be edited
