@@ -23,7 +23,7 @@ let signupForm = $("#signup-form"),
 //     rating = $("#rating")
 
 if(signupForm.length){
-    signupForm.on("submit", function(event) {
+    signupForm.on("submit", async function(event) {
         event.preventDefault();
 
         //resets error label
@@ -51,6 +51,14 @@ if(signupForm.length){
 
             //bio
             if(bio.val().trim() !== "") bio.val(h.checkValidString(bio.val(), 20, 255, "Bio"));
+
+            //picture
+            if(picture.val().trim() !== "") {
+                let picFetch = await fetch(picture.val().trim())
+                if(!picFetch.ok) throw "Error: not a valid picture url"
+                else picture.val(picture.val().trim())
+            }
+            else picture.val("https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg")
 
             //privacy
             privacy.val(privacy.val().trim().toLowerCase());
@@ -85,7 +93,7 @@ if(signupForm.length){
 }
 
 if(settingsForm.length){
-    settingsForm.on("submit", function(event) {
+    settingsForm.on("submit", async function(event) {
         event.preventDefault();
 
         //resets error and updated label
@@ -118,6 +126,13 @@ if(settingsForm.length){
             //bio
             if(bio.val().trim() !== "") bio.val(h.checkValidString(bio.val(), 20, 255, "Bio"));
 
+            //picture
+            if(picture.val().trim() !== "") {
+                let picFetch = await fetch(picture.val().trim())
+                if(!picFetch.ok) throw "Error: not a valid picture url"
+                else picture.val(picture.val().trim())
+            }
+            
             //privacy
             if(privacy.val().trim() !=="") {
                 privacy.val(privacy.val().trim().toLowerCase());
