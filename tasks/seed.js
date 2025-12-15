@@ -37,7 +37,7 @@ export const seedFunc = async () => {
         formattedResult["park"] = result["propertyna"];
 
         //Ratings
-        formattedResult["averageRatings"] = {
+        formattedResult["avgRatings"] = {
             taste: 0,
             location: 0,
 		    pressure: 0,

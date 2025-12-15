@@ -35,7 +35,15 @@ export const registerUsers = async (
   if(bio.trim() !== "") bio = h.checkValidString(bio, 20, 255, "Bio");
 
   //Validate picture
-
+  let defaultUrl = "https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg"
+  let picFetch = fetch(picture)
+  if (!picFetch){
+     throw "Error! Picture URL  not valid"
+  }
+  if(!picture){
+    picture = fetch(defaultUrl)
+  }
+  
   //Validate privacy
   privacy = privacy.trim().toLowerCase();
   if(privacy !== "private" && privacy !== "public") throw "Error: privacy must only be 'private' or 'public'";
@@ -53,6 +61,8 @@ export const registerUsers = async (
 
   //Hash password
   password = await bcrypt.hash(password, 16);
+
+  
 
   //Create new user
   let newUser = {
@@ -329,6 +339,14 @@ if(newEmail !== ""){
         if(existingUser) throw "Error: password is already taken"
     }
 
+    //validate image
+    //Validate picture
+    if(newPic){
+      let picFetch = fetch(newPic)
+      if (!picFetch){
+        throw "Error! Picture URL  not valid"
+      }
+    }
   //IF PARAMS WERE NOT ADDED, KEEP THE SAME -> LIKE REGISTER IN LAB 10
   let updatedUser = await userCollection.findOneAndUpdate(
     { _id: username },

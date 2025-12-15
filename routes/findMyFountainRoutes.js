@@ -89,6 +89,45 @@ router
     }
   });
 
+  
+
+  router
+  .route('/register')
+  .get(async (req, res) => {
+    // code here for GET register page
+    try {
+        return res.status(200).render('register')
+    } catch(e) {
+        //error message
+        return res.status(403).render("error hello testing", {error:e})
+    }
+  })
+  .post(async (req, res) => {
+    // code here for POST register (create user)
+    try {
+            //define registration terms
+            let firstName = req.body.firstName
+            let lastName = req.body.lastName
+            let email = req.body.email
+            let username = req.body.username
+            let password = req.body.password
+            let bio = req.body.bio
+            let picture = req.body.picture
+            let privacy = req.body.privacy
+
+            let confirmPassword = req.body.confirmPassword;
+            if (password !== confirmPassword) throw "Error: password and confirmPassword must match";
+            
+            //registering 
+            let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture,privacy)
+            //take back to home but now logged in 
+            return res.status(200).redirect("/login")
+        } catch(e) {
+            //error message
+            return res.status(403).render("error", {error:e})
+        }
+  });
+
 
 
 router
@@ -473,6 +512,19 @@ router
   .route('/reviews/:id/delete')
   .post(async (req, res) => {
     // code here for POST delete review
+    try {if(!req.params.id || req.params.id === "") throw "Error: no id provided";
+
+      let reviewId = req.params.id;
+
+      await reviewsData.removeReview(reviewId);
+
+      res.redirect(req.get("referer"));
+    } catch (e) {
+      return res.status(400).render('error', {
+        title: 'Error',
+        error: e
+      });
+    }
   });
 
 // Add a comment to a review
