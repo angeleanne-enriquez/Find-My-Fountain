@@ -44,7 +44,7 @@ export const removeReview = async (reviewId) => {
     const review = await reviewCollection.findOne({"_id": reviewId});
     if (!review) throw "Review not found!";
 
-    let fountainId = h.checkValidID(review["fountain"]);
+    let fountainId = review["fountain"];
 
     //Get fountain
     const fountainCollection = await fountains();

@@ -88,15 +88,15 @@ export const removeReview = async (reviewId) => {
     //Get reviews collection
     const reviewCollection = await reviews();
 
+    //Update the reviewList and average ratings of the fountain
+    await f.removeReview(reviewId.toString());
+
+    //Update the reviewList of the user
+    await u.removeReview(reviewId.toString());
+
     //Upload new review to database
     const insertInfo = await reviewCollection.deleteOne({_id: reviewId});
     if (!insertInfo.acknowledged) throw 'Could not delete review!';
-
-    //Update the reviewList and average ratings of the fountain
-    f.removeReview(reviewId.toString());
-
-    //Update the reviewList of the user
-    u.removeReview(reviewId.toString());
 };
 
 //Adds a user comment to a review
