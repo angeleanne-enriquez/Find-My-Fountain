@@ -143,7 +143,7 @@ export const getReviewsByFountainId = async (fountainId) => {
   
     // get all reviews whose fountain field matches this fountainId
     const reviewList = await reviewCollection
-      .find({ fountain: fountainId })
+      .find({ fountain: fountainId.toString() })
       .toArray();
   
     return reviewList;
