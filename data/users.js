@@ -36,10 +36,11 @@ export const registerUsers = async (
 
   //Validate picture
   let defaultUrl = "https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg"
-  let picFetch = fetch(picture)
-  if (!picFetch.ok){
+  if(picture.trim() !== "") {
+    let picFetch = await fetch(picture)
+    if (!picFetch.ok){
      throw "Error! Picture URL not valid"
-  }
+  }}
   if(!picture || picture.trim() === ""){
     picture = defaultUrl;
   }
@@ -83,7 +84,7 @@ export const registerUsers = async (
   if (!insertInfo.acknowledged || !insertInfo.insertedId)
     throw "Could not add user!";
 
-  return await getUserProfile(insertInfo.insertedId);
+  return await getUserProfile(username);
 };
 
 //Adds a fountain to a user's favorite list
@@ -342,7 +343,7 @@ if(newEmail !== ""){
     //validate image
     //Validate picture
     if(newPic !== ""){
-      let picFetch = fetch(newPic)
+      let picFetch = await fetch(newPic)
       if (!picFetch.ok){
         throw "Error! Picture URL  not valid"
       }

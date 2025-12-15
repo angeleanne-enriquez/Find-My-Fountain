@@ -77,7 +77,7 @@ if(signupForm.length){
                     password: password.val(),
                     confirmPassword: confirmPassword.val(),
                     bio: bio.val(),
-                    pic: picture.val(),
+                    picture: picture.val(),
                     privacy: privacy.val()})
             }).then(function() {
                 window.location.href = "/login";
