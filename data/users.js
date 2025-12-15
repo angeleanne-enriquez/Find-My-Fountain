@@ -37,11 +37,11 @@ export const registerUsers = async (
   //Validate picture
   let defaultUrl = "https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg"
   let picFetch = fetch(picture)
-  if (!picFetch){
-     throw "Error! Picture URL  not valid"
+  if (!picFetch.ok){
+     throw "Error! Picture URL not valid"
   }
-  if(!picture){
-    picture = fetch(defaultUrl)
+  if(!picture || picture.trim() === ""){
+    picture = defaultUrl;
   }
   
   //Validate privacy
@@ -341,9 +341,9 @@ if(newEmail !== ""){
 
     //validate image
     //Validate picture
-    if(newPic){
+    if(newPic !== ""){
       let picFetch = fetch(newPic)
-      if (!picFetch){
+      if (!picFetch.ok){
         throw "Error! Picture URL  not valid"
       }
     }
