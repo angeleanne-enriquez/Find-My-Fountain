@@ -88,7 +88,7 @@ router
       });
     }
   });
-  
+
 
 
 router
@@ -478,6 +478,13 @@ router
   .route('/reviews/:id/delete')
   .post(async (req, res) => {
     // code here for POST delete review
+    if(!req.params.id || req.params.id === "") throw "Error: no id provided";
+
+    let reviewId = req.params.id;
+
+    reviewsData.removeReview(reviewId);
+
+    res.redirect(req.get("referer"));
   });
 
 // Add a comment to a review
