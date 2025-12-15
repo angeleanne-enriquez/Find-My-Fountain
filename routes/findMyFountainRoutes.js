@@ -38,81 +38,55 @@ router
   .get(async (req, res) => {
     // code here for GET login page
     try {
-      return res.render('login')
+      return res.status(200).render('login')
     }catch(e){
       //error message
-      return res.status(403).render("error", {error:e})
+      return res.status(500).render("error", {error:e})
       }
   })
   .post(async (req, res) => {
     // code here for POST login (authenticate user)
-    try{
-      //field validation
-      if (!req.body.username){
-        return res.status(403).render("login", {error:"must fill in username"})
-       }
-      if (!req.body.password){
-        return res.status(403).render("login", {error:"must fill in password"})
-      }
-      //login
-      let didLogin = await usersData.login(req.body.username,req.body.password)
-      if (didLogin){
-        req.session.user = {
-          username: didLogin.username,
-          firstName: didLogin.firstName,
-          lastName: didLogin.lastName,
-          email: didLogin.email,
-          bio: didLogin.bio,
-          picture: didLogin.picture,
-          _id: didLogin._id
-        }
-        return res.redirect(`/user/${req.session.user["username"]}`)
-      } else {
-        //error message
-        return res.status(403).render("error", {error:"login error"})
-      }
-    } catch(e){
-      return res.status(403).render("error", {error:e})
-    }
-  });
-
-
-
-router
-  .route('/register')
-  .get(async (req, res) => {
-    // code here for GET register page
     try {
-        return res.status(200).render('register')
-    } catch(e) {
-        //error message
-        return res.status(403).render("error hello testing", {error:e})
-    }
-  })
-  .post(async (req, res) => {
-    // code here for POST register (create user)
-    try {
-            //define registration terms
-            let firstName = req.body.firstName
-            let lastName = req.body.lastName
-            let email = req.body.email
-            let username = req.body.username
-            let password = req.body.password
-            let bio = req.body.bio
-            let picture = req.body.picture
-            let privacy = req.body.privacy
+      const { username, password } = req.body;
+      const errors = {};
 
-            let confirmPassword = req.body.confirmPassword;
-            if (password !== confirmPassword) throw "Error: password and confirmPassword must match";
-            
-            //registering 
-            let newUser = await usersData.registerUsers(firstName,lastName,email,password,username,bio,picture,privacy)
-            //take back to home but now logged in 
-            return res.status(200).redirect("/login")
-        } catch(e) {
-            //error message
-            return res.status(403).render("error", {error:e})
-        }
+      // very basic server-side checks for presence
+      if (!username || username.trim().length === 0) {
+        errors.username = 'You must provide a username';
+      }
+      if (!password || password.length === 0) {
+        errors.password = 'You must provide a password';
+      }
+
+      if (Object.keys(errors).length > 0) {
+        return res.status(400).render('login', {
+          title: 'Login',
+          errors,
+        });
+      }
+
+      // call data layer login(username, password)
+      const didLogin = await usersData.login(username, password);
+
+      // store what the data layer actually returns
+      req.session.user = {
+        _id: didLogin._id,
+        username: didLogin.username,
+        firstName: didLogin.firstName,
+        lastName: didLogin.lastName,
+        bio: didLogin.bio,
+        picture: didLogin.picture,
+      };
+
+      // redirect to this user's profile page
+      return res.redirect(`/user/${req.session.user._id}`);
+    } catch (e) {
+      // invalid username/password or other error
+      return res.status(400).render('login', {
+        title: 'Login',
+        error: e,
+      });
+    }
   });
 
 
@@ -121,21 +95,12 @@ router
   .route('/logout')
   .get(async (req, res) => {
     // code here for GET logout (clear session, redirect or render page)
-    try {
-    req.session.destroy();
-    res.clearCookie("AuthenticationState");
-    return res.status(200).render("logout", { title: "Logged Out" });
-  } catch (e) {
-      return res.status(403).render("error", {
-        title: "Log Out",
-        error: e,
-      });
-  }
+    
   });
 
 
 
-/* ========== Search ========== */
+/* ========== Search Results ========== */
 // POST /search
 router
   .route('/search')
@@ -150,20 +115,6 @@ router
   })
   .post(async (req, res) => {
     // code here for POST search (use filters, return searchResults view)
-    try{
-      if (!req.body.q){
-        req.body.q = ''
-      }
-      //filters
-      let parkFilter = req.body.park
-      let ratingFilter = req.body.rating
-
-      let fountainBoroughs = await fountainsData.fountainByBorough(req.body.q,parkFilter,ratingFilter)
-      res.render('searchResults',{borough:req.body.q,fountainBoroughs:fountainBoroughs})
-    } catch(e){
-      //error message
-      return res.status(403).render("error", {error:e})
-    }
   });
 
 
@@ -175,105 +126,71 @@ router
   .get(async (req, res) => {
     // code here for GET fountain details
     try {
-        //checking if arguments are provided 
-        if(!req.params.id || req.params.id === "") throw "Error: no id provided";
-
         //checking if fountain exists
-        let fountainId = req.params.id;
-        let fountain = await fountainsData.getFountain(fountainId);
+        const fountainId = req.params.id;
 
-        if(!fountain) return res.status(403)
-            .render("error", {
-            title: "Error",
-            error: "Error: fountain cannot be found",
-            errorClass: "error",
-            link: "/fountain",
-        });
+        // get fountain from DB
+        const fountain = await fountainsData.getFountain(fountainId);
 
-        //checking if fountain is operational
-        if(fountain.operational === false) return res.status(403)
-            .render("error", {
-            title: "Error",
-            error: "Error: fountain is not working",
-            errorClass: "error",
-            link: "/fountain",
-        })
-
-        let user = null,
-            favorited = false,
-            reviews = fountain.reviews;
+        // Get reviews for this fountain
+        const reviews = await reviewsData.getReviewsByFountainId(fountainId);
         
-        //checking if user already favorited it 
-        if(req.session.user) {
-            user = req.session.user;
-            
-            let userData = await usersData.getUserProfile(user.username);
-            let favorites = await userData["favorites"];
+        // Simple location display string
+        let locationDisplay = 'Location data not available';
+        if (Array.isArray(fountain.location) && fountain.location.length === 2) 
+          locationDisplay = `${fountain.location[0]}, ${fountain.location[1]}`;
 
-            favorited = (favorites.includes(req.params.id));
-        }
+        // Logged-in user
+        const user = req.session.user || null;
+
+        let favorited = false;
+        if (user && Array.isArray(user.favorites)) 
+          favorited = user.favorites.includes(fountainId);
 
         return res.status(200).render('fountainDetails', {
-          fountain: fountain,
-          user: user,
-          favorited: favorited, 
-          reviews: reviews
-        });
+          title: 'Fountain Details',
+          fountain,
+          locationDisplay,
+          reviews,
+          user,
+          favorited
+        }); 
     } catch(e) {
-        return res.status(403).render("error", {error:e})
+        return res.status(404).render("error", {title: 'Error', error:e})
     }
   })
   .post(async (req, res) => {
     // code here for POST new review / mark as working
     try {
-        //checking if arguments are provided 
-        if(!req.params.id || req.params.id === "") throw "Error: no id provided";
+      if (!req.session || !req.session.user) {
+        return res
+          .status(401)
+          .json({ error: 'You must be logged in to submit a review.' });
+      }
 
-        //checking if fountain exists
-        let fountainId = req.params.id;
-        let fountain = await fountainsData.getFountain(fountainId);
+      const fountainId = req.params.id;
+      const username = req.session.user.username; // from your session
 
-        if(!fountain) return res.status(403)
-            .render("error", {
-            title: "Error",
-            error: "Error: fountain cannot be found",
-            errorClass: "error",
-            link: "/fountain",
-        });
+      const body = req.body.reviewText;
 
-        //checking if fountain is operational
-        /*if(fountain.operational === false) return res.status(403)
-            .render("error", {
-            title: "Error",
-            error: "Error: fountain is not working",
-            errorClass: "error",
-            link: "/fountain",
-        })*/
+      const ratings = {
+        taste: Number(req.body.taste),
+        location: Number(req.body.location),
+        pressure: Number(req.body.pressure),
+        cleanliness: Number(req.body.cleanliness),
+        accessibility: Number(req.body.accessibility),
+        operational:
+          req.body.operational === 'true' ||
+          req.body.operational === 'on' ||
+          req.body.operational === true
+      };
 
-        if(!req.session.user) return res.status(403)
-            .render("error", {
-            title: "Error",
-            error: "Error: user must be logged in to write/edit/delete a review",
-            errorClass: "error",
-            link: "/fountain",
-        })
+      await reviewsData.createReview(username, fountainId, body, ratings);
 
-        let username = req.session.user.username,
-            reviewText = req.body.reviewText,
-            ratings = {
-              taste: Number(req.body.taste),
-              location: Number(req.body.location),
-              pressure: Number(req.body.pressure),
-              cleanliness: Number(req.body.cleanliness), 
-              accessibility: Number(req.body.accessibility),
-              operational: (req.body.operational === "true")
-            };
-
-        await reviewsData.createReview(username, fountainId, reviewText, ratings);
-
-        res.redirect(req.get("referer"));
-    } catch(e) {
-        return res.status(403).render("error", {error:e})
+      // For Ajax: tell the client it worked
+      return res.json({ reviewCreated: true });
+    } catch (e) {
+      return res.status(400).json({ error: e.toString() });
     }
   });
 
@@ -281,119 +198,93 @@ router
   .route('/fountain/:id/like')
   .post(async (req, res) => {
     // code here for POST like fountain
-    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged in to favorite!"});
-
-    let user = req.session.user;
-    let fountainId = req.params.id;
-
-    await usersData.addFavoriteFountain(fountainId, user.username);
-
-    res.redirect(req.get("referer"));
   });
 
 router
   .route('/fountain/:id/dislike')
   .post(async (req, res) => {
     // code here for POST dislike fountain
-    if (!req.session.user) return res.status(403).render("error", {error: "Must be logged in to unfavorite!"});
-
-    let user = req.session.user;
-    let fountainId = req.params.id;
-
-    await usersData.removeFavoriteFountain(fountainId, user.username);
-
-    res.redirect(req.get("referer"));
   });
 
 
 
 /* ========== User Profile ========== */
-// GET /user/:username   (show a user's profile, favorites, reviews)
+// GET /user/:id   (show a user's profile, favorites, reviews)
+// POST /user/:id  (edits to your own profile: bio/picture)
 router
-  .route('/user/:username')
+  .route('/user/:id')
   .get(async (req, res) => {
     // code here for GET user profile
     try {
-        if (!req.params.username || req.params.username === "") {
+        if (!req.params.id || req.params.id === "")
           //check if username is in the route
-          throw "Error: no username provided";
-        }
+          throw "Error: no user id provided";
+    
+        let username = req.params.id; //check if user exists; throws otherwise
+        let user = await usersData.getUserProfile(username);
 
-        let viewUsername = req.params.username; //check if user exists; throws otherwise
-        let viewUser = await usersData.getUserProfile(viewUsername);
-
-        if(!viewUser) return res.status(403)
-            .render("error", {
-            title: "Error",
-            error: "Error: user cannot be found",
-            errorClass: "error",
-            link: "/user",
-        });
-
-        if(((req.session.user) && (req.session.user.username === viewUser.username)) || viewUser.privacy === "public") {
-          
-          let firstName = viewUser.firstName; //get all the info abt the user to display on the page
-          let lastName = viewUser.lastName;
-          let bio = viewUser.bio;
-          let picture = viewUser.picture;
-          let favorites = viewUser.favorites;
-          let reviews = viewUser.reviews;
-
-          let isOwnProfile = ((req.session.user) && (req.session.user.username === viewUser.username));
-          
-          let loginUser = null;
-          if (req.session.user) loginUser = req.session.user;
-
-          let favoriteFountains = await fountainsData.getFavoriteFountains(favorites);
-
-          return res.status(200).render("profile", {
-            //returns page with that info
-            title: `User: ${viewUsername}`,
-            viewUser: {
-              firstName: firstName,
-              lastName: lastName,
-              bio: bio,
-              picture: picture,
-              favorites: favoriteFountains,
-              reviews: reviews,
-              username: viewUsername
-            },
-            user: loginUser,
-            isOwnProfile: isOwnProfile
-          });
-        }
+        if(req.session.user.username === username || user.privacy === "public"){
+    
+        let firstName = user.firstName; //get all the info abt the user to display on the page
+        let lastName = user.lastName;
+        let bio = user.bio;
+        let picture = user.picture;
+        let favorites = user.favorites;
+        let reviews = user.reviews;
+        //   let likedFountains = userName.likedFountains;,
+        //   dislikedFountains = userName.dislikedFountains;,
+        //   privacy = userName.privacy;,
+        //   role = userName.role;
+    
+        return res.status(200).render("profile", {
+          //returns page with that info
+          title: `User: ${username}`,
+          firstName,
+          lastName,
+          bio,
+          picture,
+          favorites,
+          reviews,
+          //   likedFountains,
+          //   dislikedFountains,
+          //   privacy,
+          //   role
+        });}
         else throw "Error: This user is private.";
       } catch (e) {
         return res.status(403).render("error", {
           //renders error page if there is an error
           title: "User",
-          error: e,
+          errorMessages: e,
           errorClass: "error", 
         });
       }
   })
+  .post(async (req, res) => {
+    // code here for POST profile updates
+  });
 
 
 /* ========== Settings for user ========== */
 router
-  .route("/user/:username/settings")
+  .route("/user/:id/settings")
   .get(async (req, res) => {
     try {
-      if (!req.params.username || req.params.username === "")
+      if (!req.params.id || req.params.id === "")
         //checks if username is in the route
         throw "Error: no userlink provided";
 
-      let username = req.params.username; //checks if user exists
+      let username = req.params.id; //checks if user exists
       await usersData.getUserProfile(username);
 
-      if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings", user: {username: username }}); //renders status page
+      if(username === req.session.user._id) return res.status(200).render("settings", { title: "Settings" }); //renders status page
       else throw "Error: cannot look at user's settings that are not your own."
 
     } catch (e) {
       return res.status(403).render("error", {
         //renders error page if there was an error
         title: "Settings",
-        error: e,
+        errorMessages: e,
         errorClass: "settingsError",
       });
     }
@@ -402,13 +293,11 @@ router
   .post(async (req, res) => {
     //code here for POST
     try {
-        if(!req.params.username || req.params.username === "") throw "Error: no username provided";
-        
-      if (req.session.user.username !== req.params.username)
+      if (req.session.user._id !== req.params.id)
         //checks if user is the same as the one on the page to be able to edit settings
         throw "Error: Cannot edit the settings of another user";
 
-      let username = req.session.user.username;
+      let username = req.session.user._id;
 
       let settingsFields = [
         //checks if there is at least one field that is going to be edited
@@ -469,7 +358,7 @@ router
       return res.status(403).render("error", {
         //renders error page if there was an error
         title: "Settings",
-        error: e,
+        errorMessages: e,
         errorClass: "settingsError",
       });
     }
@@ -499,30 +388,25 @@ router
 router
   .route('/reviews/:id/comments')
   .post(async (req, res) => {
-    // code here for POST add comment on a review
-    if(!req.params.id || req.params.id === "") throw "Error: no id provided";
+    try {
+      if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+      }
 
-    let reviewId = req.params.id;
-    let review = await reviewsData.getReviewContent(reviewId);
+      const reviewId = req.params.id;
+      const username = req.session.user.username;
+      const body = req.body.commentText;
 
-    if(!review) return res.status(403)
-        .render("error", {
-        title: "Error",
-        error: "Error: review cannot be found",
-        errorClass: "error",
-        link: "/review",
-    });
+      await reviewsData.addComment(reviewId, username, body);
 
-    if(!req.session.user) return res.status(403)
-        .render("error", {
-        title: "Error",
-        error: "Error: user must be logged in to comment under a review",
-        errorClass: "error",
-        link: "/review",
-    });
-
-    let username = req.session.user.username, 
-        comment = req.body.body
+      // simplest: go back to the page the user came from
+      return res.redirect('back');
+    } catch (e) {
+      return res.status(400).render('error', {
+        title: 'Error',
+        error: e
+      });
+    }
   });
 
 export default router;
