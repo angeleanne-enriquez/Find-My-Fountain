@@ -1,5 +1,6 @@
 import * as h from "../helpers.js";
 import * as f from "./fountains.js";
+import * as u from "./users.js";
 import { users, fountains, reviews } from "../config/mongoCollections.js";
 
 //Validates a given ratings object
@@ -61,10 +62,11 @@ export const createReview = async (username, fountainId, body, ratings) => {
 
     const newReview = {
         username: username,
-        fountain: fountainId,
+        fountain: fountainId.toString(),
         body: body,
         ratings: ratings,
-        comments: []
+        comments: [],
+        date: h.formatDate(new Date())
     };
 
     //Upload new review to database
@@ -72,9 +74,10 @@ export const createReview = async (username, fountainId, body, ratings) => {
     if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add review!';
 
     //Update the reviewList and average ratings of the fountain
-    await f.addReview(fountainId, insertInfo.insertedId);
-    
-    return getReviewContent(insertInfo.insertedId);
+    f.addReview(fountainId, insertInfo.insertedId);
+
+    //Update the reviewList of the user
+    u.addReview(insertInfo.insertedId, username);
 };
 
 //Adds a user comment to a review
@@ -140,7 +143,7 @@ export const getReviewsByFountainId = async (fountainId) => {
   
     // get all reviews whose fountain field matches this fountainId
     const reviewList = await reviewCollection
-      .find({ fountain: fountainId })
+      .find({ fountain: fountainId.toString() })
       .toArray();
   
     return reviewList;

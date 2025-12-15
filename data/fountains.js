@@ -23,10 +23,10 @@ export const addReview = async (fountainId, reviewId) => {
     reviewList.push(reviewId);
 
     //Recalculate the average ratings
-    const avgRatings = calculateAverages(reviewList);
+    let avgRatings = await calculateAverages(reviewList);
 
     //Update the fountain
-    await reviewCollection.updateOne({"_id": reviewId}, {$set:
+    await fountainCollection.updateOne({"_id": fountainId}, {$set:
         {
             reviews: reviewList,
             avgRatings: avgRatings
@@ -68,9 +68,6 @@ export const calculateAverages = async (reviewIds) => {
         if (reviewRatings.operational) operationalSum++;
         validCount++;
     }
-
-    if (validCount === 0)
-        return null;
 
     //Determines if enough people have flagged the fountain as non-operational for the flag to be visible
     const operational = (validCount - operationalSum) > operationalThreshold;

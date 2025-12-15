@@ -76,9 +76,13 @@
                 {{/if}}
               </p>
               {{#if this.ratings}}
-                <p><strong>Rating:</strong> {{this.ratings}} / 5</p>
+                <p><strong>Taste:</strong> {{this.ratings.taste}} / 5</p>
+                <p><strong>Location:</strong> {{this.ratings.location}} / 5</p>
+                <p><strong>Pressure:</strong> {{this.ratings.pressure}} / 5</p>
+                <p><strong>Cleanliness:</strong> {{this.ratings.cleanliness}} / 5</p>
+                <p><strong>Accessibility:</strong> {{this.ratings.accessibility}} / 5</p>
               {{/if}}
-              <p>{{this.text}}</p>
+              <p>{{this.body}}</p>
             </li>
           {{/each}}
         </ul>
@@ -109,61 +113,61 @@
       {{!-- Taste rating --}}
         <div class="form-group">
           <label for="taste">Taste (1–5):</label>
-          <input
-            type="number"
-            id="taste"
-            name="taste"
-            min="1"
-            max="5"
-          >
+          <select name="taste" id="taste">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
 
         {{!-- Location rating --}}
         <div class="form-group">
           <label for="location">Location (1–5):</label>
-          <input
-            type="number"
-            id="location"
-            name="location"
-            min="1"
-            max="5"
-          >
+          <select name="location" id="location">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
 
         {{!-- Pressure rating --}}
         <div class="form-group">
           <label for="pressure">Pressure (1–5):</label>
-          <input
-            type="number"
-            id="pressure"
-            name="pressure"
-            min="1"
-            max="5"
-          >
+          <select name="pressure" id="pressure">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
 
         {{!-- Taste rating --}}
         <div class="form-group">
           <label for="cleanliness">Cleanliness (1–5):</label>
-          <input
-            type="number"
-            id="cleanliness"
-            name="cleanliness"
-            min="1"
-            max="5"
-          >
+          <select name="cleanliness" id="cleanliness">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
 
         {{!-- Accessibility rating --}}
         <div class="form-group">
           <label for="accessibility">Accessibility (1–5):</label>
-          <input
-            type="number"
-            id="accessibility"
-            name="accessibility"
-            min="1"
-            max="5"
-          >
+          <select name="accessibility" id="accessibility">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
 
         {{!-- Review text --}}

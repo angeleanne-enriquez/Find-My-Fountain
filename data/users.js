@@ -181,7 +181,7 @@ export const addReview = async (reviewId, username) => {
 
   //Add the review to the user profile
   let reviewList = user["reviews"];
-  reviewList.push(review["_id"]);
+  reviewList.push(review["_id"].toString());
 
   await userCollection.updateOne(
     { "username": username },
