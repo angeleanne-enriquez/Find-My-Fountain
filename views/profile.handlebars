@@ -69,20 +69,26 @@
             <li>
               <p>
                 <strong>Fountain:</strong>
-                <a href="/fountain/{{this.fountainId}}">{{this.fountainName}}</a>
+                <a href="/fountain/{{this._id}}">{{this.park}}, {{this.borough}}</a>
               </p>
-              <p><strong>Rating:</strong> {{this.rating}} / 5</p>
-              <p>{{this.text}}</p>
+              {{#if this.ratings}}
+                <p><strong>Taste:</strong> {{this.ratings.taste}} / 5</p>
+                <p><strong>Location:</strong> {{this.ratings.location}} / 5</p>
+                <p><strong>Pressure:</strong> {{this.ratings.pressure}} / 5</p>
+                <p><strong>Cleanliness:</strong> {{this.ratings.cleanliness}} / 5</p>
+                <p><strong>Accessibility:</strong> {{this.ratings.accessibility}} / 5</p>
+              {{/if}}
+              <p>{{this.body}}</p>
 
               {{!-- Only show edit/delete if this review is editable by the current user --}}
-              {{#if this.canEdit}}
+              {{!--{{#if this.canEdit}}
                 <form action="/reviews/{{this.id}}/edit" method="GET" style="display:inline;">
                   <button type="submit">Edit</button>
                 </form>
                 <form action="/reviews/{{this.id}}/delete" method="POST" style="display:inline;">
                   <button type="submit">Delete</button>
                 </form>
-              {{/if}}
+              {{/if}}--}}
             </li>
           {{/each}}
         </ul>
