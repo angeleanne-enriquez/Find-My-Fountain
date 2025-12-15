@@ -71,7 +71,6 @@ router
 
       // store what the data layer actually returns
       req.session.user = {
-        _id: didLogin._id,
         username: didLogin.username,
         firstName: didLogin.firstName,
         lastName: didLogin.lastName,
@@ -80,7 +79,7 @@ router
       };
 
       // redirect to this user's profile page
-      return res.redirect(`/user/${req.session.user._id}`);
+      return res.redirect(`/user/${req.session.user.username}`);
     } catch (e) {
       // invalid username/password or other error
       return res.status(400).render('login', {
