@@ -208,10 +208,10 @@ router
 
 
 /* ========== User Profile ========== */
-// GET /user/:id   (show a user's profile, favorites, reviews)
-// POST /user/:id  (edits to your own profile: bio/picture)
+// GET /user/:username   (show a user's profile, favorites, reviews)
+// POST /user/:username  (edits to your own profile: bio/picture)
 router
-  .route('/user/:id')
+  .route('/user/:username')
   .get(async (req, res) => {
     // code here for GET user profile
     try {
@@ -219,7 +219,7 @@ router
           //check if username is in the route
           throw "Error: no user id provided";
     
-        let username = req.params.id; //check if user exists; throws otherwise
+        let username = req.params.username; //check if user exists; throws otherwise
         let user = await usersData.getUserProfile(username);
 
         if(req.session.user.username === username || user.privacy === "public"){
@@ -273,7 +273,7 @@ router
         //checks if username is in the route
         throw "Error: no userlink provided";
 
-      let username = req.params.id; //checks if user exists
+      let username = req.params.username; //checks if user exists
       await usersData.getUserProfile(username);
 
       if(username === req.session.user.username) return res.status(200).render("settings", { title: "Settings" }); //renders status page
@@ -292,7 +292,7 @@ router
   .post(async (req, res) => {
     //code here for POST
     try {
-      if (req.session.user.username !== req.params.id)
+      if (req.session.user.username !== req.params.username)
         //checks if user is the same as the one on the page to be able to edit settings
         throw "Error: Cannot edit the settings of another user";
 
