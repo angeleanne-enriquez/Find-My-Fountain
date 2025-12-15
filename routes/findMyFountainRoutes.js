@@ -256,15 +256,6 @@ router
             link: "/fountain",
         });
 
-     //checking if fountain is operational
-        if(fountain.operational === false) return res.status(403)
-            .render("error", {
-            title: "Error",
-            error: "Error: fountain is not working",
-            errorClass: "error",
-            link: "/fountain",
-        })
-
         if(!req.session.user) return res.status(403)
             .render("error", {
             title: "Error",
@@ -276,22 +267,20 @@ router
         let user = req.session.user.username,
             reviewText = req.body.reviewText,
             ratings = {
-            taste: req.body.taste,
-            location: req.body.location,
-            pressure: req.body.pressure,
-            cleanliness: req.body.cleanliness, 
-            accessiblity: req.body.accessibility,
-            operational: req.body.operational}
+            taste: Number(req.body.taste),
+            location: Number(req.body.location),
+            pressure: Number(req.body.pressure),
+            cleanliness: Number(req.body.cleanliness), 
+            accessibility: Number(req.body.accessibility),
+            operational: req.body.operational === "true"}
 
-        let review = await reviewsData.createReview(user, fountainId, reviewText, ratings);
-        if(!review) throw "Error: unable to create review/mark fountain as un/operational.";
+        await reviewsData.createReview(user, fountainId, reviewText, ratings);
 
-        let reviewAdded = await fountainsData.addReview(fountainId, review._id);
-        if(!reviewAdded) throw "Error: unable to add review/mark fountain as un/operational.";
+        let fountainReviews = await reviewsData.getReviewsByFountainId(fountainId);
 
-        let reviews = fountain.reviews;
+        fountain = await fountainsData.getFountain(fountainId);
 
-        return res.status(200).render('fountainDetails',fountain, user, reviews);
+        return res.status(200).render('fountainDetails', {fountain: fountain, user: user, reviews: fountainReviews});
     } catch(e) {
         return res.status(403).render("error", {error:e})
     }
@@ -385,7 +374,7 @@ router
               bio: bio,
               picture: picture,
               favorites: favoriteFountains,
-              reviews: reviews,
+              reviews: reviewFountains,
               username: viewUsername
             },
             user: loginUser,
